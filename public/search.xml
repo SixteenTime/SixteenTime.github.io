@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Hello World</title>
+    <url>/2021/12/11/hello-world/</url>
+    <content><![CDATA[<p>你好你好你好！</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>test1</title>
+    <url>/2021/12/11/test1/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Sat Dec 11 2021 00:00:00 GMT+0800 (中国标准时间)</title>
+    <url>/2021/12/11/%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%E6%97%B6%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p>主要是deploy部署问题的坑</p>
+<p>1.需要输入Github账号和密码，输入之后依旧部署失败</p>
+<p>解决方法：网上查询后得知是2021.8.13github不支持输入账号密码登陆而要求输入token登陆，在参考了这篇博客资料后成功解决了该问题，直接在需要输入密码的地方输入token。</p>
+<p><a href="https://blog.csdn.net/yjw123456/article/details/119696726#commentBox">https://blog.csdn.net/yjw123456/article/details/119696726#commentBox</a></p>
+<p>2.解决上面的问题，但是出现以下错误：</p>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><code class="hljs pgsql">OpenSSL SSL_read: <span class="hljs-keyword">Connection</span> was <span class="hljs-keyword">reset</span>, errno <span class="hljs-number">10054</span><br></code></pre></td></tr></table></figure>
+
+<p>解决方法：以下这篇博客：</p>
+<p><a href="https://blog.csdn.net/sinat_38816924/article/details/120802126">https://blog.csdn.net/sinat_38816924/article/details/120802126</a></p>
+]]></content>
+  </entry>
+</search>
