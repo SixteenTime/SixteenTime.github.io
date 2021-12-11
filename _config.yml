@@ -62,16 +62,6 @@ ignore: null
 theme: zhaoo
 deploy:
   type: git
-  repo: 
-    coding: git@e.coding.net:sixteentime/sixteentime/sixteentime.git,master
-    github: git@github.com:sixteentime/sixteentime.github.io.git,main
-# Extensions
-## Plugins: https://hexo.io/plugins/
-#RSS订阅
-plugin:
-- hexo-generator-feed
-#Feed Atom
-feed:
-  type: atom
-  path: atom.xml
-  limit: 20
+  repo: https://github.com/SixteenTime/SixteenTime.github.io.git
+  branch: main
+  repository: git@github.com:SixteenTime/SixteenTime.github.io.git
