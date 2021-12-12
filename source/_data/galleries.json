@@ -1,0 +1,22 @@
+[{
+    "name": "她们", 
+    "cover": "/images/beauty/02.jfif", 
+    "description": "好喜欢她们啊。", 
+    "photos": [ 
+      "/images/beauty/01.png",
+      "/images/beauty/02.jfif",
+      "/images/beauty/03.jfif",
+      "/images/beauty/05.JPG",
+      "/images/beauty/06.JPG",
+      "/images/beauty/07.PNG",
+      "/images/beauty/08.PNG",
+      "/images/beauty/09.jpeg"
+    ]
+  }, {
+    "name": "书摘",
+    "cover": "/images/book/01.jpg",
+    "description": "这些文字是不能被遗忘的。",
+    "photos": [
+      "/images/book/01.jpg"
+    ]
+  }]

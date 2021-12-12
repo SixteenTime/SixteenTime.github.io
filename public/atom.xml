@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>十六时二十一分三十六秒</title>
+  
+  <subtitle>这个标题没有任何意义！</subtitle>
+  <link href="https://sixteentime.github.io/atom.xml" rel="self"/>
+  
+  <link href="https://sixteentime.github.io/"/>
+  <updated>2021-12-11T14:40:03.343Z</updated>
+  <id>https://sixteentime.github.io/</id>
+  
+  <author>
+    <name>十六太</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>2021/12/11</title>
+    <link href="https://sixteentime.github.io/2021/12/11/2021-12-11/"/>
+    <id>https://sixteentime.github.io/2021/12/11/2021-12-11/</id>
+    <published>2021-12-11T14:02:12.000Z</published>
+    <updated>2021-12-11T14:40:03.343Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="2021-12-11"><a href="#2021-12-11" class="headerlink" title="2021/12/11"></a>2021/12/11</h1><p><em>第一次搭建博客，第一次在博客上写日记。好兴奋啊。此时正听着“歪波音室”。</em></p><p>今天早上又是八点才醒，去图书馆时纠结了一下还是带了一本笔记本，其实主要是纠结带哪本笔记本，想带一本“真正的日记本”，可是以前的每一本“日记本”最后都变成了我的草稿本，现在拾起来自己都嫌弃了。最后只能拿买莎士比亚全集送的一本纯白笔记本，本子里有很多莎士比亚话剧的插画，实在不适合当日记本，这一本最初企图当作摘抄本来用，可是我也没这么勤劳。果然，我依旧没有那么勤劳，它被我带出图书馆的样子和带进来时没有区别，没有增加一个字。</p><p>新鲜事物确实有着很大的诱惑力和影响力，我一整天基本都在“沉迷”于搭建这个博客，顺便开了Forest来记录我的学习，说是学习…也有点过意不去，因为这强烈的兴奋感不亚于我玩游戏时的乐趣。当然，最兴奋的还是选背景照片的时候，我看着妮可在《时时刻刻》中的剧照——实在，实在是太美了，我爱她，我爱伍尔夫。</p><p>可是搭建这个博客依旧存在很多问题，明天继续探索。希望我能一直在这里写日记吧。今天在写这片日记的时候，我的状态是很好的，好期待明天，好期待以后。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;2021-12-11&quot;&gt;&lt;a href=&quot;#2021-12-11&quot; class=&quot;headerlink&quot; title=&quot;2021/12/11&quot;&gt;&lt;/a&gt;2021/12/11&lt;/h1&gt;&lt;p&gt;&lt;em&gt;第一次搭建博客，第一次在博客上写日记。好兴奋啊。此时正听着“歪波音室</summary>
+      
+    
+    
+    <content src="https://sixteentime.github.io/images/2021121101.png" type="image"/>
+    
+    
+    
+    <category term="日记" scheme="https://sixteentime.github.io/tags/%E6%97%A5%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用hexo搭建博客时遇到的问题</title>
+    <link href="https://sixteentime.github.io/2021/12/11/%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%E6%97%B6%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98/"/>
+    <id>https://sixteentime.github.io/2021/12/11/%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2%E6%97%B6%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98/</id>
+    <published>2021-12-11T05:40:40.000Z</published>
+    <updated>2021-12-11T14:41:49.034Z</updated>
+    
+    <content type="html"><![CDATA[<p>主要是deploy部署问题的坑</p><h3 id="1-需要输入Github账号和密码，输入之后依旧部署失败"><a href="#1-需要输入Github账号和密码，输入之后依旧部署失败" class="headerlink" title="1.需要输入Github账号和密码，输入之后依旧部署失败"></a>1.需要输入Github账号和密码，输入之后依旧部署失败</h3><p>问题描述：在输入命令 <code>hexo d</code> 来部署时提示需要输入Github的账号和密码进行验证，输入后提示登陆验证失败。</p><p>解决方法：网上查询后得知是2021年8月13日之后github不支持输入账号密码登陆而要求输入token登陆，在参考了这篇博客资料后成功解决了该问题，直接在需要输入密码的地方输入token。</p><p><a href="https://blog.csdn.net/yjw123456/article/details/119696726#commentBox">https://blog.csdn.net/yjw123456/article/details/119696726#commentBox</a></p><h3 id="2-解决上面的问题，但是出现openSSL问题"><a href="#2-解决上面的问题，但是出现openSSL问题" class="headerlink" title="2.解决上面的问题，但是出现openSSL问题"></a>2.解决上面的问题，但是出现openSSL问题</h3><p>问题描述：错误信息：<code>OpenSSL SSL_read: Connection was reset, errno 10054</code></p><p>解决方法：以下这篇博客：</p><p><a href="https://blog.csdn.net/sinat_38816924/article/details/120802126">https://blog.csdn.net/sinat_38816924/article/details/120802126</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;主要是deploy部署问题的坑&lt;/p&gt;
+&lt;h3 id=&quot;1-需要输入Github账号和密码，输入之后依旧部署失败&quot;&gt;&lt;a href=&quot;#1-需要输入Github账号和密码，输入之后依旧部署失败&quot; class=&quot;headerlink&quot; title=&quot;1.需要输入Github账</summary>
+      
+    
+    
+    
+    
+    <category term="hexo" scheme="https://sixteentime.github.io/tags/hexo/"/>
+    
+  </entry>
+  
+</feed>

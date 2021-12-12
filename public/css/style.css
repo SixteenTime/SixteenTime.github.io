@@ -6,8 +6,8 @@
   --color-text-secondary: #4e4e4e;
   --color-text-third: #999;
   --color-border: #eee;
-  --background-image: url("/images/theme/welcome-image4.jpg");
-  --loading-image: url("/images/theme/loading1.gif");
+  --background-image: url("/images/theme/welcome-image.png");
+  --loading-image: url("/images/theme/loading.gif");
   --lazyload-image: url("/images/theme/loading.gif");
 }
 @media (prefers-color-scheme: dark) {
@@ -22,8 +22,8 @@
     --color-text-secondary: #9899ab;
     --color-text-third: #7d8594;
     --color-border: #2b3038;
-    --background-image: url("/images/theme/welcome-image.jpg");
-    --loading-image: url("/images/theme/loading1.gif");
+    --background-image: url("/images/theme/welcome-image6.jfif");
+    --loading-image: url("/images/theme/loading.gif");
     --lazyload-image: url("/images/theme/loading.gif");
   }
 }
@@ -35,8 +35,8 @@
   --color-text-secondary: #9899ab;
   --color-text-third: #7d8594;
   --color-border: #2b3038;
-  --background-image: url("/images/theme/welcome-image.jpg");
-  --loading-image: url("/images/theme/loading1.gif");
+  --background-image: url("/images/theme/welcome-image6.jfif");
+  --loading-image: url("/images/theme/loading.gif");
   --lazyload-image: url("/images/theme/loading.gif");
 }
 [color-mode='dark'] .tags a {

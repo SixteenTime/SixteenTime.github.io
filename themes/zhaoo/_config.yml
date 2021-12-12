@@ -6,9 +6,6 @@
 menu:
   home: / || 首页
   galleries: /galleries/ || 相册
-  readnote: /readnote/ || 阅读
-  movienote: /movienote/ || 电影
-  diary: /diary/ || 日记
   archives: /archives/ || 归档
   tags: /tags/ || 标签
   categories: /categories/ || 分类
@@ -41,7 +38,7 @@ favicon:
 
 # Font
 font:
-  size: 14px
+  size: 16px
   family:
 
 # Background Image
@@ -94,15 +91,15 @@ scrollbar:
 # Fab (Float Action Button)
 fab:
   enable: true
-  always_show: false
+  always_show: true
 
 # Search
 search:
-  enable: false
-  # path: /search.xml
-  # field: post
-  # format: html
-  # content: true
+  enable: true
+  path: /search.xml
+  field: post
+  format: html
+  content: true
 
 # QR Code
 qrcode:
@@ -154,8 +151,8 @@ toc:
 # Donate
 donate:
   enable: false
-  alipay: https://pic.izhaoo.com/alipay.jpg
-  wechat: https://pic.izhaoo.com/wechat.jpg
+  alipay: ''
+  wechat: ''
 
 # Copyright
 post_copyright:
@@ -173,8 +170,8 @@ carrier:
 # Galleries
 galleries:
   enable: true
-  title: 摄影
-  subtitle: Photography
+  title: 相册
+  subtitle: Galleries
   type: waterfall # waterfall | grid
   columns: 3
 
@@ -223,8 +220,8 @@ notification:
 
 # Daovoice
 daovoice:
-  enable: false
-  appId: # app_id
+  enable: true
+  appId: 832fad8c
 
 # Tencent Chao
 tencentChao:
@@ -233,9 +230,9 @@ tencentChao:
 
 # LeanCloud
 leancloud:
-  enable: false
-  appId:
-  appKey:
+  enable: true
+  appId: QDLldNrn5PdbTkPouKxy9MTL-gzGzoHsz
+  appKey: SMKzGNQEHmaffzyfgV05h8eL
   serverURLs: https://leancloud.cn/
 
 # Lazyload

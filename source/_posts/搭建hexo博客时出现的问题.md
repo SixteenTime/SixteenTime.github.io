@@ -1,7 +1,9 @@
 ---
 title: 使用hexo搭建博客时遇到的问题
 date: 2021-12-11 13:40:40
-tags: hexo
+tags: [hexo, 学习]
+categories:
+- 博客
 ---
 
 主要是deploy部署问题的坑
