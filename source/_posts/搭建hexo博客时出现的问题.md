@@ -20,7 +20,7 @@ https://blog.csdn.net/yjw123456/article/details/119696726#commentBox
 
 问题描述：错误信息：`OpenSSL SSL_read: Connection was reset, errno 10054`
 
-解决方法：以下这篇博客：
+解决方法：删掉项目根目录下的 `.deploy_git` 文件，重新执行命令 `hexo d` ,参考以下这篇博客：
 
-https://blog.csdn.net/sinat_38816924/article/details/120802126
+https://www.cnblogs.com/tenderwx/p/5783432.html
 
