@@ -62,6 +62,6 @@ ignore: null
 theme: zhaoo
 deploy:
   type: git
-  repo: https://github.com/SixteenTime/SixteenTime.github.io.git
-  branch: main
-  repository: git@github.com:SixteenTime/SixteenTime.github.io.git
+  repo: 
+    coding: git@e.coding.net:sixteentime/sixteentime/sixteentime.git,main 
+    github: git@github.com:SixteenTime/SixteenTime.github.io.git,main 
