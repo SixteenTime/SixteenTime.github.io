@@ -23,4 +23,20 @@
     "photos": [
       "/images/book/01.jpg"
     ]
+  },{
+    "name": "Alex", 
+    "cover": "/images/Alex/01.png", 
+    "description": "有一个人爱上了你，如果你也喜欢那个人，那你就对她说：天空是白色的。如果我是那个人，那我会说：但云朵是黑的，这样我们就相爱了。Alex不只是一个人名。", 
+    "photos": [ 
+      "/images/Alex/01.png",
+      "/images/Alex/02.png",
+      "/images/Alex/03.png",
+      "/images/Alex/05.png",
+      "/images/Alex/04.png",
+      "/images/Alex/06.png",
+      "/images/Alex/07.png",
+      "/images/Alex/08.png",
+      "/images/Alex/09.png",
+      "/images/Alex/10.png"
+    ]
   }]

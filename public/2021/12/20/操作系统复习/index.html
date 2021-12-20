@@ -1,0 +1,505 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>操作系统基础复习 - 16:21:59</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="
+本文来源于https://github.com/Cy...">
+  <meta name="author" content="十六太">
+  <link rel="icon" href="/images/icons/logo_16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/logo_32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/logo_180.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/logo_128.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/logo_144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_p6ry5n7lrr.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/xcode.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      loading: {
+        gif: '/images/theme/loading.gif',
+        lottie: ''
+      },
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: {
+          gif: '/images/theme/loading.gif',
+          lottie: ''
+        }
+      },
+      donate: {
+        enable: false,
+        alipay: '',
+        wechat: ''
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: true
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: true
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '啊！她好美 她好美 她好美！',
+          typing: true,
+          api: '',
+          data_contents: '["data","content"]'
+        },
+      },
+      qrcode: {
+        enable: false,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="16:21:59" type="application/atom+xml">
+</head>
+
+<body class="lock-screen">
+  <div class="loading" id="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">操作系统基础复习</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 相册</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/theme/post-image.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">操作系统基础复习</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>十二月 20, 2021</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2021/12/20/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0/" class="leancloud-counter" data-flag-title="操作系统基础复习"></span>
+        </span>
+        <span class="post-info-item">
+          <i class="iconfont iconheart"></i><span id="/2021/12/20/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0/" class="leancloud-like" data-flag-title="操作系统基础复习"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>1150</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        
+        <hr>
+<p><em>本文来源于<a target="_blank" rel="noopener" href="https://github.com/CyC2018/CS-Notes%EF%BC%8C%E6%98%AF%E5%9C%A8%E9%98%85%E8%AF%BB%E8%AF%A5%E8%B5%84%E6%BA%90%E6%97%B6%E7%9A%84%E7%AC%94%E8%AE%B0%E6%95%B4%E7%90%86%EF%BC%8C%E4%BD%86%E6%9C%89%E5%A4%A7%E9%83%A8%E5%88%86%E7%9A%84%E5%86%85%E5%AE%B9%E5%92%8C%E5%8E%9F%E6%96%87%E4%B8%80%E8%87%B4%E3%80%82">https://github.com/CyC2018/CS-Notes，是在阅读该资源时的笔记整理，但有大部分的内容和原文一致。</a></em></p>
+<hr>
+<h2 id="1-基本特质"><a href="#1-基本特质" class="headerlink" title="1.基本特质"></a>1.基本特质</h2><p>操作系统的基本特征为并发、共享、虚拟、异步。</p>
+<p><strong>并发</strong>：同一时间段运行多个程序，区分<u>并行</u>，并行指同一时刻运行多个指令，需要硬件支持。</p>
+<p><strong>共享</strong>：指系统的资源可以被多个并发进程同时共享。共享方式分为<u>互斥共享</u>（同一时刻只允许一个进程访问，其共享资源被称为临界资源，比如打印机）和<u>同时共享</u>。</p>
+<p><strong>虚拟</strong>：把一个物理实体转换为多个逻辑实体，虚拟技术有<u>时分复用技术</u>（比如多个进程并发执行）和<u>空分复用技术</u>（比如虚拟内存）。</p>
+<p><strong>异步</strong>：进程不是一次性执行完毕。</p>
+<h2 id="2-基本功能"><a href="#2-基本功能" class="headerlink" title="2.基本功能"></a>2.基本功能</h2><p>包括<u>进程管理</u>、<u>内存管理</u>、<u>文件管理</u>和<u>设备管理</u>。</p>
+<h2 id="3-系统调用"><a href="#3-系统调用" class="headerlink" title="3.系统调用"></a>3.系统调用</h2><p>如果一个进程在用户态需要使用内核态功能，则进行系统调度，Linux的系统调度有<u>进程控制、进程通信、文件操作、设备操作、信息维护、安全</u>。</p>
+<h2 id="4-大内核和微内核"><a href="#4-大内核和微内核" class="headerlink" title="4.大内核和微内核"></a>4.大内核和微内核</h2><p><strong>大内核</strong>：将操作系统功能作为一个紧密结合的整体放在内核中，各模块共享信息，具有高性能。</p>
+<p><strong>微内核</strong>：将部分操作系统功能移除内核，只有微内核这部分模块处在内核态，可降低系统的复杂性。</p>
+<h2 id="5-中断分类"><a href="#5-中断分类" class="headerlink" title="5.中断分类"></a>5.中断分类</h2><p><strong>外中断</strong>：由CPU执行指令以外的事件引起的中断，如I/O完成中断等。</p>
+<p><strong>异常</strong>：由CPU执行指令内部事件引起的中断，如地址越界等。</p>
+<p><strong>陷入</strong>：在用户程序中使用系统调用引起。</p>
+<h2 id="6-进程管理"><a href="#6-进程管理" class="headerlink" title="6.进程管理"></a>6.进程管理</h2><h3 id="6-1-进程和线程"><a href="#6-1-进程和线程" class="headerlink" title="6.1 进程和线程"></a>6.1 进程和线程</h3><p><strong>进程</strong>：资源分配的基本单位，PCB（进程控制块）描述进程的基本信息和运行状态。</p>
+<p><strong>线程</strong>：独立调度的基本单位，一个进程有多个线程，它们共享进程资源。</p>
+<p><strong>进程和线程的区别（面试题）：</strong></p>
+<p>进程是<u>资源分配</u>的基本单位，线程不拥有资源，但是线程可以访问所属进程的资源。</p>
+<p>进程<u>开销</u>大，在创建、撤销和切换进程时，系统都要为之分配或回收资源，而线程切换只需要保存和设置少量寄存器内容，开销小。</p>
+<p>进程<u>通信</u>需要借助IPC，线程间通过直接读写同一进程数据可进行通信。</p>
+<h3 id="6-2-进程状态转换"><a href="#6-2-进程状态转换" class="headerlink" title="6.2 进程状态转换"></a>6.2 进程状态转换</h3><p>进程的状态转换如图所示：</p>
+<p><img   class="lazyload" data-original="/images/react/2021122006.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>其中，<u>处于就绪状态和运行状态的进程可以相互转换</u>，其他状态进程只能单向转换。处于阻塞状态的进程是缺少资源（不包括时间资源）的进程。</p>
+<h3 id="6-3-批处理系统"><a href="#6-3-批处理系统" class="headerlink" title="6.3 批处理系统"></a>6.3 批处理系统</h3><p>该系统没有太多用户操作，调度算法包括<u>FCFS</u>（先来先服务，有利于长作业）、<u>SJF</u>（短作业优先，不利于长作业）、<u>SRTN</u>（最短剩余时间优先）。该系统的调度算法目标是保证吞吐量和周转时间（从提交到终止的时间）。</p>
+<h3 id="6-4-交互式系统"><a href="#6-4-交互式系统" class="headerlink" title="6.4 交互式系统"></a>6.4 交互式系统</h3><p>该系统有大量用户交互操作，调度算法包括<u>时间片轮转</u>、<u>优先级调度</u>、<u>多级反馈列表</u>。该系统的调度算法目标是快速进行响应。</p>
+<h3 id="6-5-实时系统"><a href="#6-5-实时系统" class="headerlink" title="6.5 实时系统"></a>6.5 实时系统</h3><p>实时系统要求一个请求在一个确定时间内得到响应。分为<u>硬实时和软实时</u>，前者必须满足绝对的截止时间，后者可以容忍一定的超时。</p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>十六太</li>
+    <li><strong>本文链接：</strong><a href="https://sixteentime.github.io/2021/12/20/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0/index.html" title="https:&#x2F;&#x2F;sixteentime.github.io&#x2F;2021&#x2F;12&#x2F;20&#x2F;%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0&#x2F;index.html">https:&#x2F;&#x2F;sixteentime.github.io&#x2F;2021&#x2F;12&#x2F;20&#x2F;%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%A4%8D%E4%B9%A0&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95%EF%BC%8C%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="tag">前端面试，操作系统</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag">学习</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a></a>
+    <a href="/2021/12/20/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%A4%8D%E4%B9%A0/">计算机网络基础复习<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E7%89%B9%E8%B4%A8"><span class="toc-text">1.基本特质</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD"><span class="toc-text">2.基本功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-text">3.系统调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%A4%A7%E5%86%85%E6%A0%B8%E5%92%8C%E5%BE%AE%E5%86%85%E6%A0%B8"><span class="toc-text">4.大内核和微内核</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E4%B8%AD%E6%96%AD%E5%88%86%E7%B1%BB"><span class="toc-text">5.中断分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="toc-text">6.进程管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B"><span class="toc-text">6.1 进程和线程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81%E8%BD%AC%E6%8D%A2"><span class="toc-text">6.2 进程状态转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-%E6%89%B9%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F"><span class="toc-text">6.3 批处理系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-%E4%BA%A4%E4%BA%92%E5%BC%8F%E7%B3%BB%E7%BB%9F"><span class="toc-text">6.4 交互式系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-%E5%AE%9E%E6%97%B6%E7%B3%BB%E7%BB%9F"><span class="toc-text">6.5 实时系统</span></a></li></ol></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="https://github.com/sixteentime "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a><a 
+        href="mailto:1476827275@163.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+    <div class="fab fab-like">
+      <i class="iconfont iconheart"></i>
+    </div>
+  
+  
+    <div class="fab fab-daovoice">
+      <i class="iconfont iconcomment"></i>
+    </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'QDLldNrn5PdbTkPouKxy9MTL-gzGzoHsz',
+      appKey: 'SMKzGNQEHmaffzyfgV05h8eL',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const Counter = AV.Object.extend("Counter");
+    const Like = AV.Object.extend("Like");
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud-counter").each(async (e) => {
+        const url = $(".leancloud-counter").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud-counter").eq(e).text(count ? count : 0);
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud-counter").length === 1 ? $(".leancloud-counter").attr('id').trim() : 'https://sixteentime.github.io';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    const showLike = (Like) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud-like").each(async (e) => {
+        const url = $(".leancloud-like").eq(e).attr('id').trim();
+        const query = new AV.Query("Like");
+        query.equalTo("path", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud-like").eq(e).text(count ? count : 0);
+      });
+    }
+
+    const addLike = (Like) => {
+      const url = $(".leancloud-like").length === 1 ? $(".leancloud-like").attr('id').trim() : 'https://sixteentime.github.io';
+      var query = new Like;
+      query.save({
+        path: url,
+        nickName: 'Anonymous'
+      });
+      $(".leancloud-like").addClass('islike');
+      $(".fab-like").children(".iconfont").removeClass("iconheart").addClass("iconheart-fill").css("color", "#eb3223");
+      ZHAOO.zui.message({ text: '爱你哦~', type: 'success' });
+      setTimeout(() => showLike(Like), 1000);
+    }
+
+    const handleLikeClick = () => {
+      const isLike = $(".leancloud-like").length === 1 && $(".leancloud-like").hasClass('islike') ? true : false;
+      if (isLike) {
+        ZHAOO.zui.message({ text: '小心心不可以收回呢~', type: 'warning' });
+      } else {
+        addLike(Like);
+      }
+    }
+
+    $(function () {
+      addCount(Counter);
+      showCount(Counter);
+      showLike(Like);
+      $(".fab-like").on("click", function () {
+        handleLikeClick();
+      });
+    });
+
+  });
+</script>
+
+
+
+  
+
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i["DaoVoiceObject"] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    a.charset = "utf-8";
+    m.parentNode.insertBefore(a, m)
+  })(window, document, "script", "https://widget.daovoice.io/widget/0f81ff2f.js", "daovoice")
+  daovoice('init', {
+    app_id: "832fad8c"
+  }, {
+    launcher: {
+      disableLauncherIcon: true,
+    },
+  });
+  daovoice('update');
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
