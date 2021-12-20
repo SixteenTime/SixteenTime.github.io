@@ -1,0 +1,497 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>React的列表和表单 - 16:21:59</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="一、使用map来进行列表渲染1234567891011...">
+  <meta name="author" content="十六太">
+  <link rel="icon" href="/images/icons/logo_16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/logo_32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/logo_180.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/logo_128.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/logo_144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_p6ry5n7lrr.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/xcode.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      loading: {
+        gif: '/images/theme/loading.gif',
+        lottie: ''
+      },
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: {
+          gif: '/images/theme/loading.gif',
+          lottie: ''
+        }
+      },
+      donate: {
+        enable: false,
+        alipay: '',
+        wechat: ''
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: true
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: true
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '啊！她好美 她好美 她好美！',
+          typing: true,
+          api: '',
+          data_contents: '["data","content"]'
+        },
+      },
+      qrcode: {
+        enable: false,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="16:21:59" type="application/atom+xml">
+</head>
+
+<body class="lock-screen">
+  <div class="loading" id="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">React的列表和表单</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 相册</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/theme/post-image.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">React的列表和表单</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>十二月 19, 2021</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2021/12/19/React%E5%AD%A6%E4%B9%A0%E4%B8%89/" class="leancloud-counter" data-flag-title="React的列表和表单"></span>
+        </span>
+        <span class="post-info-item">
+          <i class="iconfont iconheart"></i><span id="/2021/12/19/React%E5%AD%A6%E4%B9%A0%E4%B8%89/" class="leancloud-like" data-flag-title="React的列表和表单"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>8626</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        
+        <h3 id="一、使用map来进行列表渲染"><a href="#一、使用map来进行列表渲染" class="headerlink" title="一、使用map来进行列表渲染"></a>一、使用map来进行列表渲染</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;utf-8&quot;</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../js/react.development.js&quot;</span> <span class="hljs-attr">crossorigin</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../js/react-dom.development.js&quot;</span> <span class="hljs-attr">crossorigin</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../js/babel.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;test1&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>		<br>	<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/babel&quot;</span>&gt;</span><span class="javascript"></span><br><span class="javascript">		<span class="hljs-comment">//通过map的方式渲染列表</span></span><br><span class="javascript">		</span><br><span class="javascript">		<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">List</span>(<span class="hljs-params">props</span>)</span>&#123;</span><br><span class="javascript">			<span class="hljs-comment">//获取列表参数</span></span><br><span class="javascript">			<span class="hljs-keyword">const</span> numbers=props.numbers;</span><br><span class="javascript">			<span class="hljs-comment">//利用map进行渲染</span></span><br><span class="javascript">			<span class="hljs-keyword">const</span> listItem=numbers.map((<span class="hljs-function"><span class="hljs-params">number</span>=&gt;</span></span><br><span class="javascript">			<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>&#123;number&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span></span>));</span><br><span class="javascript">			</span><br><span class="javascript">			<span class="hljs-keyword">return</span> (</span><br><span class="javascript">			  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>&#123;listItem&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span></span></span><br><span class="javascript">			)</span><br><span class="javascript">		&#125;</span><br><span class="javascript">		</span><br><span class="javascript">		<span class="hljs-keyword">const</span> numbers=[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>];</span><br><span class="javascript">		ReactDOM.render(</span><br><span class="javascript">		<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">List</span> <span class="hljs-attr">numbers</span>=<span class="hljs-string">&#123;numbers&#125;</span> /&gt;</span></span>,</span><br><span class="javascript">		<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#x27;test1&#x27;</span>))</span><br><span class="javascript"></span><br><span class="javascript">		</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>运行以上代码，发现已成功渲染列表，但是在控制台获得警告如下：</p>
+<p><img   class="lazyload" data-original="/images/react/2021121903.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>提示对于列表的每一个元素都需要key关键词，给每一列添加key:<code>&lt;li key=&#123;number.toString()&#125;&gt;&#123;number&#125;&lt;/li&gt;));</code>，key作为列表中每个元素的唯一标识符，是有优化性能的作用。对于应该在哪里设置元素的key，一个好的经验法则是：在 <code>map()</code> 方法中的元素需要设置 key 属性。</p>
+<p>以上情况可以也通过以下方法实现</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs jsx">funtion <span class="hljs-function"><span class="hljs-title">ListItem</span>(<span class="hljs-params">props</span>)</span>&#123;<br>			<span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>&#123;props.value&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span></span><br>&#125;<br>		<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">List2</span>(<span class="hljs-params">props</span>)</span>&#123;<br>	<span class="hljs-keyword">const</span> numbers=props.numbers;<br>	<span class="hljs-keyword">return</span> (<br>		 <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span></span><br><span class="xml">			&#123;numbers.map((number=&gt;</span><br><span class="xml">			<span class="hljs-tag">&lt;<span class="hljs-name">ListItem</span> <span class="hljs-attr">key</span>=<span class="hljs-string">&#123;number.toString()&#125;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&#123;number&#125;</span> /&gt;</span></span><br><span class="xml">			))&#125;</span><br><span class="xml">		<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span></span><br>	)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="二、表单"><a href="#二、表单" class="headerlink" title="二、表单"></a>二、表单</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;utf-8&quot;</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../js/react.development.js&quot;</span> <span class="hljs-attr">crossorigin</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../js/react-dom.development.js&quot;</span> <span class="hljs-attr">crossorigin</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../js/babel.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;test1&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>		<br>	<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/babel&quot;</span>&gt;</span><span class="javascript"></span><br><span class="javascript">		<span class="hljs-comment">//表单的运用</span></span><br><span class="javascript">		</span><br><span class="javascript">		<span class="hljs-comment">//通过类自定义的内有方法来更方便迅捷地操作表单</span></span><br><span class="javascript">		</span><br><span class="javascript">		<span class="hljs-comment">//自定义表单组件</span></span><br><span class="javascript">		<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">NameForm</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">React</span>.<span class="hljs-title">Component</span></span>&#123;</span><br><span class="javascript">			<span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span>&#123;</span><br><span class="javascript">				<span class="hljs-built_in">super</span>(props);</span><br><span class="javascript">				<span class="hljs-comment">//定义可更改的变量，即表单输入元素</span></span><br><span class="javascript">				<span class="hljs-built_in">this</span>.state=&#123;<span class="hljs-attr">value</span>:<span class="hljs-string">&#x27;&#x27;</span>&#125;;</span><br><span class="javascript">				<span class="hljs-comment">//在具体方法中绑定this来实现对state的改变。</span></span><br><span class="javascript">				<span class="hljs-built_in">this</span>.handleChange=<span class="hljs-built_in">this</span>.handleChange.bind(<span class="hljs-built_in">this</span>);</span><br><span class="javascript">				<span class="hljs-built_in">this</span>.handleSubmit=<span class="hljs-built_in">this</span>.handleSubmit.bind(<span class="hljs-built_in">this</span>);</span><br><span class="javascript">			&#125;</span><br><span class="javascript">			</span><br><span class="javascript">			<span class="hljs-function"><span class="hljs-title">handleChange</span>(<span class="hljs-params">event</span>)</span>&#123;</span><br><span class="javascript">				<span class="hljs-built_in">this</span>.setState(&#123;<span class="hljs-attr">value</span>:event.target.value&#125;);</span><br><span class="javascript">			&#125;</span><br><span class="javascript">			<span class="hljs-function"><span class="hljs-title">handleSubmit</span>(<span class="hljs-params">event</span>)</span>&#123;</span><br><span class="javascript">				<span class="hljs-comment">//提交前显示名字</span></span><br><span class="javascript">				alert(<span class="hljs-string">&#x27;提交的名字：&#x27;</span>+<span class="hljs-built_in">this</span>.state.value);</span><br><span class="javascript">				event.preventDefault();</span><br><span class="javascript">			&#125;</span><br><span class="javascript">			<span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span>&#123;</span><br><span class="javascript">				<span class="hljs-keyword">return</span>(</span><br><span class="javascript">				  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">onSubmit</span>=<span class="hljs-string">&#123;this.handleSubmit&#125;</span>&gt;</span></span></span><br><span class="xml"><span class="javascript">				    <span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span></span></span><br><span class="xml"><span class="javascript">					  名字:</span></span><br><span class="xml"><span class="javascript">					  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&#123;this.state.value&#125;</span> <span class="hljs-attr">onChange</span>=<span class="hljs-string">&#123;this.handleChange&#125;</span> /&gt;</span></span></span><br><span class="xml"><span class="javascript">					 <span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span></span><br><span class="xml"><span class="javascript">					  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;submit&quot;</span>&gt;</span>提交<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span></span><br><span class="xml"><span class="javascript">					<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span>  </span><br><span class="javascript">				)</span><br><span class="javascript">			&#125;</span><br><span class="javascript">		&#125;</span><br><span class="javascript">		ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">NameForm</span> /&gt;</span></span>,<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#x27;test1&#x27;</span>))</span><br><span class="javascript"></span><br><span class="javascript">		</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>以上例子实现了一个自定义表单的应用。</p>
+<p>注意：在Html中<code>&lt;textarea&gt;</code> 组件直接通过子元素定义其文本，而在React中通过属性value来确定其文本。针对<code>&lt;select&gt;</code>组件React 并不会使用 <code>selected</code> 属性，而是在根 <code>select</code> 标签上使用 <code>value</code> 属性。这在受控组件中更便捷，因为您只需要在根标签中更新它。</p>
+<p>具体关于textarea 和select在React里的具体操作如下所示：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;utf-8&quot;</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../js/react.development.js&quot;</span> <span class="hljs-attr">crossorigin</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../js/react-dom.development.js&quot;</span> <span class="hljs-attr">crossorigin</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../js/babel.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;test1&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>		<br>	<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/babel&quot;</span>&gt;</span><span class="javascript"></span><br><span class="javascript">		<span class="hljs-comment">//表单的运用</span></span><br><span class="javascript">		</span><br><span class="javascript">		<span class="hljs-comment">//通过类自定义的内有方法来更方便迅捷地操作表单</span></span><br><span class="javascript">		</span><br><span class="javascript">		<span class="hljs-comment">//自定义表单组件</span></span><br><span class="javascript">		<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">NameForm</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">React</span>.<span class="hljs-title">Component</span></span>&#123;</span><br><span class="javascript">			<span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span>&#123;</span><br><span class="javascript">				<span class="hljs-built_in">super</span>(props);</span><br><span class="javascript">				<span class="hljs-comment">//定义可更改的变量，即表单输入元素</span></span><br><span class="javascript">				<span class="hljs-built_in">this</span>.state=&#123;</span><br><span class="javascript">					<span class="hljs-attr">value</span>:<span class="hljs-string">&#x27;&#x27;</span>,</span><br><span class="javascript">					<span class="hljs-attr">textValue</span>:<span class="hljs-string">&#x27;&#x27;</span>,</span><br><span class="javascript">					<span class="hljs-attr">selected</span>:<span class="hljs-string">&#x27;aa&#x27;</span>,</span><br><span class="javascript">				&#125;;</span><br><span class="javascript">				<span class="hljs-comment">//在具体方法中绑定this来实现对state的改变。</span></span><br><span class="javascript">				<span class="hljs-built_in">this</span>.handleChange=<span class="hljs-built_in">this</span>.handleChange.bind(<span class="hljs-built_in">this</span>);</span><br><span class="javascript">				<span class="hljs-built_in">this</span>.handleSubmit=<span class="hljs-built_in">this</span>.handleSubmit.bind(<span class="hljs-built_in">this</span>);</span><br><span class="javascript">				<span class="hljs-built_in">this</span>.handleChangeSelect=<span class="hljs-built_in">this</span>.handleChangeSelect.bind(<span class="hljs-built_in">this</span>);</span><br><span class="javascript">				<span class="hljs-built_in">this</span>.handleChangeTextarea=<span class="hljs-built_in">this</span>.handleChangeTextarea.bind(<span class="hljs-built_in">this</span>);</span><br><span class="javascript">			&#125;</span><br><span class="javascript">			</span><br><span class="javascript">			<span class="hljs-function"><span class="hljs-title">handleChange</span>(<span class="hljs-params">event</span>)</span>&#123;</span><br><span class="javascript">				<span class="hljs-built_in">this</span>.setState(&#123;<span class="hljs-attr">value</span>:event.target.value&#125;);</span><br><span class="javascript">			&#125;</span><br><span class="javascript">			<span class="hljs-function"><span class="hljs-title">handleSubmit</span>(<span class="hljs-params">event</span>)</span>&#123;</span><br><span class="javascript">				<span class="hljs-comment">//提交前显示名字</span></span><br><span class="javascript">				alert(<span class="hljs-string">&#x27;提交的名字：&#x27;</span>+<span class="hljs-built_in">this</span>.state.value);</span><br><span class="javascript">				event.preventDefault();</span><br><span class="javascript">			&#125;</span><br><span class="javascript">			<span class="hljs-function"><span class="hljs-title">handleChangeTextarea</span>(<span class="hljs-params">event</span>)</span>&#123;</span><br><span class="javascript">				<span class="hljs-built_in">this</span>.setState(&#123;<span class="hljs-attr">textValue</span>:event.target.value&#125;)</span><br><span class="javascript">			&#125;</span><br><span class="javascript">			<span class="hljs-function"><span class="hljs-title">handleChangeSelect</span>(<span class="hljs-params">event</span>)</span>&#123;</span><br><span class="javascript">				<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;event&#x27;</span>,event)</span><br><span class="javascript">				<span class="hljs-built_in">this</span>.setState(&#123;<span class="hljs-attr">selected</span>:event.target.value&#125;);</span><br><span class="javascript">			&#125;</span><br><span class="javascript">			<span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span>&#123;</span><br><span class="javascript">				<span class="hljs-keyword">return</span>(</span><br><span class="javascript">				  &lt;form onSubmit=&#123;this.handleSubmit&#125;&gt;</span><br><span class="javascript">				    &lt;label&gt;</span><br><span class="javascript">					  名字:</span><br><span class="javascript">					  &lt;input type=&quot;text&quot; value=&#123;this.state.value&#125; onChange=&#123;this.handleChange&#125; /&gt;</span><br><span class="javascript">					 &lt;/label&gt;</span><br><span class="javascript">					 &lt;label&gt;</span><br><span class="javascript">						 内容：</span><br><span class="javascript">						 &lt;textarea  value=&#123;this.state.textValue&#125; onChange=&#123;this.handleChangeTextarea&#125;/&gt;</span><br><span class="javascript">					 &lt;/label&gt;</span><br><span class="javascript">					 &lt;label&gt;</span><br><span class="javascript">					 	选择：</span><br><span class="javascript">					 	&lt;select value=&#123;this.state.selected&#125; onChange=&#123;this.handleChangeSelect&#125; &gt;</span><br><span class="javascript">					 	    &lt;option value=&#x27;aa&#x27;&gt;aa&lt;/ option&gt;</span><br><span class="javascript">					 		&lt;option value=&#x27;bb&#x27;&gt;bb&lt;/ option&gt;</span><br><span class="javascript">					 		&lt;option value=&#x27;cc&#x27;&gt;cc&lt;/ option&gt;</span><br><span class="javascript">					 	&lt;/select&gt;</span><br><span class="javascript">					 &lt;/label&gt;</span><br><span class="javascript">					  &lt;button type=&quot;submit&quot;&gt;提交&lt;/button&gt;</span><br><span class="javascript">					&lt;/form&gt;  </span><br><span class="javascript">				)</span><br><span class="javascript">			&#125;</span><br><span class="javascript">		&#125;</span><br><span class="javascript">		ReactDOM.render(&lt;NameForm /&gt;,document.getElementById(&#x27;test1&#x27;))</span><br><span class="javascript"></span><br><span class="javascript">		</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>以上的形式在一个表单中调用了多个onChange，也可以只调用同一个onChange函数同时监听并改变多个数据，可以给每个元素添加 <code>name</code> 属性，并让处理函数根据 <code>event.target.name</code> 的值选择要执行的操作。具体代码如下所示：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;utf-8&quot;</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../js/react.development.js&quot;</span> <span class="hljs-attr">crossorigin</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../js/react-dom.development.js&quot;</span> <span class="hljs-attr">crossorigin</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;../js/babel.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;test1&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>		<br>	<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/babel&quot;</span>&gt;</span><span class="javascript"></span><br><span class="javascript">		<span class="hljs-comment">//表单的运用</span></span><br><span class="javascript">		</span><br><span class="javascript">		<span class="hljs-comment">//通过类自定义的内有方法来更方便迅捷地操作表单</span></span><br><span class="javascript">		</span><br><span class="javascript">		<span class="hljs-comment">//自定义表单组件</span></span><br><span class="javascript">		<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">NameForm</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">React</span>.<span class="hljs-title">Component</span></span>&#123;</span><br><span class="javascript">			<span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span>&#123;</span><br><span class="javascript">				<span class="hljs-built_in">super</span>(props);</span><br><span class="javascript">				<span class="hljs-comment">//定义可更改的变量，即表单输入元素</span></span><br><span class="javascript">				<span class="hljs-built_in">this</span>.state=&#123;</span><br><span class="javascript">					<span class="hljs-attr">nameValue</span>:<span class="hljs-string">&#x27;&#x27;</span>,</span><br><span class="javascript">					<span class="hljs-attr">textValue</span>:<span class="hljs-string">&#x27;&#x27;</span>,</span><br><span class="javascript">					<span class="hljs-attr">selected</span>:<span class="hljs-string">&#x27;aa&#x27;</span>,</span><br><span class="javascript">				&#125;;</span><br><span class="javascript">				<span class="hljs-comment">//在具体方法中绑定this来实现对state的改变。</span></span><br><span class="javascript">				<span class="hljs-built_in">this</span>.handleChange=<span class="hljs-built_in">this</span>.handleChange.bind(<span class="hljs-built_in">this</span>);</span><br><span class="javascript">				<span class="hljs-built_in">this</span>.handleSubmit=<span class="hljs-built_in">this</span>.handleSubmit.bind(<span class="hljs-built_in">this</span>);</span><br><span class="javascript">			&#125;</span><br><span class="javascript">			</span><br><span class="javascript">			<span class="hljs-function"><span class="hljs-title">handleChange</span>(<span class="hljs-params">event</span>)</span>&#123;</span><br><span class="javascript">				<span class="hljs-keyword">const</span> value=event.target.value;</span><br><span class="javascript">				<span class="hljs-keyword">const</span> name=event.target.name;</span><br><span class="javascript">				<span class="hljs-built_in">this</span>.setState(&#123;</span><br><span class="javascript">					[name]:value</span><br><span class="javascript">				&#125;)</span><br><span class="javascript">			&#125;</span><br><span class="javascript">			<span class="hljs-function"><span class="hljs-title">handleSubmit</span>(<span class="hljs-params">event</span>)</span>&#123;</span><br><span class="javascript">				<span class="hljs-comment">//提交前显示名字</span></span><br><span class="javascript">				alert(<span class="hljs-string">&#x27;提交的名字：&#x27;</span>+<span class="hljs-built_in">this</span>.state.value);</span><br><span class="javascript">				<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;state&#x27;</span>,<span class="hljs-built_in">this</span>.state)</span><br><span class="javascript">				event.preventDefault();</span><br><span class="javascript">			&#125;</span><br><span class="javascript">			<span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span>&#123;</span><br><span class="javascript">				<span class="hljs-keyword">return</span>(</span><br><span class="javascript">				  &lt;form onSubmit=&#123;this.handleSubmit&#125;&gt;</span><br><span class="javascript">				    &lt;label&gt;</span><br><span class="javascript">					  名字:</span><br><span class="javascript">					  &lt;input name=&quot;nameValue&quot; type=&quot;text&quot; value=&#123;this.state.value&#125; onChange=&#123;this.handleChange&#125; /&gt;</span><br><span class="javascript">					 &lt;/label&gt;</span><br><span class="javascript">					 &lt;label&gt;</span><br><span class="javascript">						 内容：</span><br><span class="javascript">						 &lt;textarea name=&quot;textValue&quot;  value=&#123;this.state.textValue&#125; onChange=&#123;this.handleChange&#125;/&gt;</span><br><span class="javascript">					 &lt;/label&gt;</span><br><span class="javascript">					 &lt;label&gt;</span><br><span class="javascript">					 	选择：</span><br><span class="javascript">					 	&lt;select name=&quot;selected&quot; value=&#123;this.state.selected&#125; onChange=&#123;this.handleChange&#125; &gt;</span><br><span class="javascript">					 	    &lt;option value=&#x27;aa&#x27;&gt;aa&lt;/ option&gt;</span><br><span class="javascript">					 		&lt;option value=&#x27;bb&#x27;&gt;bb&lt;/ option&gt;</span><br><span class="javascript">					 		&lt;option value=&#x27;cc&#x27;&gt;cc&lt;/ option&gt;</span><br><span class="javascript">					 	&lt;/select&gt;</span><br><span class="javascript">					 &lt;/label&gt;</span><br><span class="javascript">					  &lt;button type=&quot;submit&quot;&gt;提交&lt;/button&gt;</span><br><span class="javascript">					&lt;/form&gt;  </span><br><span class="javascript">				)</span><br><span class="javascript">			&#125;</span><br><span class="javascript">		&#125;</span><br><span class="javascript">		ReactDOM.render(&lt;NameForm /&gt;,document.getElementById(&#x27;test1&#x27;))</span><br><span class="javascript"></span><br><span class="javascript">		</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br><br></code></pre></td></tr></table></figure>
+
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>十六太</li>
+    <li><strong>本文链接：</strong><a href="https://sixteentime.github.io/2021/12/19/React%E5%AD%A6%E4%B9%A0%E4%B8%89/index.html" title="https:&#x2F;&#x2F;sixteentime.github.io&#x2F;2021&#x2F;12&#x2F;19&#x2F;React%E5%AD%A6%E4%B9%A0%E4%B8%89&#x2F;index.html">https:&#x2F;&#x2F;sixteentime.github.io&#x2F;2021&#x2F;12&#x2F;19&#x2F;React%E5%AD%A6%E4%B9%A0%E4%B8%89&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag">学习</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a></a>
+    <a href="/2021/12/19/React%E5%AD%A6%E4%B9%A0%E4%BA%8C/">React的数据更新和监听事件<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BD%BF%E7%94%A8map%E6%9D%A5%E8%BF%9B%E8%A1%8C%E5%88%97%E8%A1%A8%E6%B8%B2%E6%9F%93"><span class="toc-text">一、使用map来进行列表渲染</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E8%A1%A8%E5%8D%95"><span class="toc-text">二、表单</span></a></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="https://github.com/sixteentime "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a><a 
+        href="mailto:1476827275@163.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+    <div class="fab fab-like">
+      <i class="iconfont iconheart"></i>
+    </div>
+  
+  
+    <div class="fab fab-daovoice">
+      <i class="iconfont iconcomment"></i>
+    </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'QDLldNrn5PdbTkPouKxy9MTL-gzGzoHsz',
+      appKey: 'SMKzGNQEHmaffzyfgV05h8eL',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const Counter = AV.Object.extend("Counter");
+    const Like = AV.Object.extend("Like");
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud-counter").each(async (e) => {
+        const url = $(".leancloud-counter").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud-counter").eq(e).text(count ? count : 0);
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud-counter").length === 1 ? $(".leancloud-counter").attr('id').trim() : 'https://sixteentime.github.io';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    const showLike = (Like) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud-like").each(async (e) => {
+        const url = $(".leancloud-like").eq(e).attr('id').trim();
+        const query = new AV.Query("Like");
+        query.equalTo("path", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud-like").eq(e).text(count ? count : 0);
+      });
+    }
+
+    const addLike = (Like) => {
+      const url = $(".leancloud-like").length === 1 ? $(".leancloud-like").attr('id').trim() : 'https://sixteentime.github.io';
+      var query = new Like;
+      query.save({
+        path: url,
+        nickName: 'Anonymous'
+      });
+      $(".leancloud-like").addClass('islike');
+      $(".fab-like").children(".iconfont").removeClass("iconheart").addClass("iconheart-fill").css("color", "#eb3223");
+      ZHAOO.zui.message({ text: '爱你哦~', type: 'success' });
+      setTimeout(() => showLike(Like), 1000);
+    }
+
+    const handleLikeClick = () => {
+      const isLike = $(".leancloud-like").length === 1 && $(".leancloud-like").hasClass('islike') ? true : false;
+      if (isLike) {
+        ZHAOO.zui.message({ text: '小心心不可以收回呢~', type: 'warning' });
+      } else {
+        addLike(Like);
+      }
+    }
+
+    $(function () {
+      addCount(Counter);
+      showCount(Counter);
+      showLike(Like);
+      $(".fab-like").on("click", function () {
+        handleLikeClick();
+      });
+    });
+
+  });
+</script>
+
+
+
+  
+
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i["DaoVoiceObject"] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    a.charset = "utf-8";
+    m.parentNode.insertBefore(a, m)
+  })(window, document, "script", "https://widget.daovoice.io/widget/0f81ff2f.js", "daovoice")
+  daovoice('init', {
+    app_id: "832fad8c"
+  }, {
+    launcher: {
+      disableLauncherIcon: true,
+    },
+  });
+  daovoice('update');
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
