@@ -3,7 +3,7 @@ title: React的认识与初步尝试
 date: 2021-12-19 08:39:01
 tags: [React, 学习]
 categories:
-- 博客
+- React
 ---
 
 ### 一、React是什么

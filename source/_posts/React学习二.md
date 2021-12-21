@@ -3,7 +3,7 @@ title: React的数据更新和监听事件
 date: 2021-12-19 09:19:01
 tags: [React, 学习]
 categories:
-- 博客
+- React
 ---
 
 ### 一、使用state实现更新React组件数据

@@ -3,7 +3,7 @@ title: React的状态提升&组合VS继承
 date: 2021-12-19 13:49:01
 tags: [React, 学习]
 categories:
-- 博客
+- React
 ---
 
 ### 一、状态提升

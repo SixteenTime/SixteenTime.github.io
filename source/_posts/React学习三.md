@@ -3,7 +3,7 @@ title: React的列表和表单
 date: 2021-12-19 09:45:05
 tags: [React, 学习]
 categories:
-- 博客
+- React
 ---
 
 ### 一、使用map来进行列表渲染
