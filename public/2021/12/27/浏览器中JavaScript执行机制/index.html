@@ -1,0 +1,576 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>浏览器中JavaScript执行机制 - 16:21:59</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="1.变量提升
+使用过JavaScipt的程序员都清除J...">
+  <meta name="author" content="十六太">
+  <link rel="icon" href="/images/icons/logo_16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/logo_32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/logo_180.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/logo_128.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/logo_144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_p6ry5n7lrr.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/xcode.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      loading: {
+        gif: '/images/theme/loading.gif',
+        lottie: ''
+      },
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: {
+          gif: '/images/theme/loading.gif',
+          lottie: ''
+        }
+      },
+      donate: {
+        enable: false,
+        alipay: '',
+        wechat: ''
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: true
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: true
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '啊！她好美 她好美 她好美！',
+          typing: true,
+          api: '',
+          data_contents: '["data","content"]'
+        },
+      },
+      qrcode: {
+        enable: false,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="16:21:59" type="application/atom+xml">
+</head>
+
+<body class="lock-screen">
+  <div class="loading" id="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">浏览器中JavaScript执行机制</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 相册</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/theme/post-image.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">浏览器中JavaScript执行机制</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>十二月 27, 2021</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2021/12/27/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%ADJavaScript%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/" class="leancloud-counter" data-flag-title="浏览器中JavaScript执行机制"></span>
+        </span>
+        <span class="post-info-item">
+          <i class="iconfont iconheart"></i><span id="/2021/12/27/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%ADJavaScript%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/" class="leancloud-like" data-flag-title="浏览器中JavaScript执行机制"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>4700</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        
+        <p>1.变量提升</p>
+<p>使用过JavaScipt的程序员都清除JavaScipt是按顺序执行的，不过看以下代码的输出结果，就会发现似乎并没有按’顺序’执行。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript">showName()<br><span class="hljs-built_in">console</span>.log(myname)<br><span class="hljs-keyword">var</span> myname = <span class="hljs-string">&#x27;极客时间&#x27;</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showName</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;函数showName被执行&#x27;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>执行结果如下图所示：</p>
+<p><img   class="lazyload" data-original="/images/react/2021122701.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>据图可知，在变量和函数进行声明之前就调用了它们，但是依旧能够执行。并且函数能够正常执行但是变量却是<code>underfined</code>。如果删掉变量声明，即上述代码的第三行，那么执行结果又会是什么呢？如下图所示，代码会报错。</p>
+<p><img   class="lazyload" data-original="/images/react/2021122702.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>可见如果在下文定义了变量和函数，那么在上文中使用该变量和函数时不会报错，不过函数可以顺利输出结果，但是变量却是‘underfined’，而如果在下文没有定义，则会报错。这种情况被称为变量提升。</p>
+<p>1.1 什么是变量提升</p>
+<p>首先先要了解声明和赋值的概念，对于下面这行代码：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">varname</span> = <span class="hljs-string">&#x27;name&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>其实可以分为两个阶段，即变量的声明阶段和变量赋值阶段：</p>
+<figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs delphi"><span class="hljs-keyword">var</span> <span class="hljs-keyword">name</span> = underfined<br><span class="hljs-keyword">name</span> = <span class="hljs-string">&#x27;name&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>而争对函数可以看下段代码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>)</span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;foo&#x27;</span>)<br>&#125;<span class="hljs-comment">//这个函数定义本身就是函数声明</span><br><br><span class="hljs-keyword">var</span> bar=<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;bar&#x27;</span>)<br>&#125;<br><span class="hljs-comment">//变量声明 var bar = underfined</span><br><span class="hljs-comment">//变量赋值 var = function()&#123; ... &#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>可见对于函数来说，函数声明就是函数定义本身。</p>
+<p>变量提升就是在JavaScipt代码执行过程中，把变量和函数的声明部分提到代码开头的行为，对于变量声明会设置默认值即underfined。</p>
+<p>如下图所示，就是我们的第一段代码进行变量提升后造成的效果。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-comment">//先进行变量提升，即提取变量和函数的声明</span><br><span class="hljs-selector-tag">var</span> myname = underfined<br>function showName()&#123;<br>    console<span class="hljs-selector-class">.log</span>(<span class="hljs-string">&#x27;showName被调用&#x27;</span>)<br>&#125;<br><br><span class="hljs-comment">//再是代码的可执行部分</span><br><span class="hljs-function"><span class="hljs-title">showName</span><span class="hljs-params">()</span></span><br>console<span class="hljs-selector-class">.log</span>(myname)<br>myname=<span class="hljs-string">&#x27;极客时间&#x27;</span><span class="hljs-comment">//去掉原来的var变量声明，变成变量赋值操作</span><br></code></pre></td></tr></table></figure>
+
+<p>上面就是变量提升带来的效果，其实一共就是两个步骤：1.提取变量和函数的声明放在代码顶部，对于变量声明进行<code>underfined</code>赋值。2.再执行代码可执行部分，对于原先的声明进行去除操作。</p>
+<p>1.2 Java代码的执行流程</p>
+<p>在了解什么是变量声明后，我们会以为变量声明的过程中是将代码的顺序进行改变的过程，但其实并不是，实际上代码的位置并没有改变，变量和函数声明的位置也没有变。JavaScipt的执行流程如下图所示：</p>
+<p><img   class="lazyload" data-original="/images/react/2021122703.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>其中，变量提升的实现其实是在编译阶段实现的。输入一段代码，经过编译后会生成两部分内容：执行上下文和可执行代码。如下图所示：</p>
+<p><img   class="lazyload" data-original="/images/react/2021122704.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>据图可知，在执行上下文中会保存代码的环境变量，其中就包括变量声明。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript">showName()<br><span class="hljs-built_in">console</span>.log(myname)<br><span class="hljs-keyword">var</span> myname = <span class="hljs-string">&#x27;极客时间&#x27;</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showName</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;函数showName被执行&#x27;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>对于这段代码，编辑阶段的JavaScript引擎会对其进行分析处理，第1行第2行代码因为不是变量？函数声明则不进行处理，第3行是变量声明，于是JavaScipt引擎会在环境对象中创造一个myname的属性并初始化为<code>underfined</code>，第4行则是一个函数声明，JavaScript引擎会将函数定义存储岛堆中，并在环境对象中创建一个showName属性，将该属性指向堆中函数的位置。接下来JavaScipt会将声明以外的代码编译成字节码。这样就有了包含环境对象（变量声明）的执行上下文和可执行代码了。</p>
+<p>接下来就是进行执行阶段。在执行阶段，JavaScipt引擎是按照可执行代码的顺序一步一步执行的，争对上面这段代码的可执行部分就是：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">showName</span><span class="hljs-params">()</span></span><br>console<span class="hljs-selector-class">.log</span>(myname)<br>myname=<span class="hljs-string">&#x27;极客时间&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>执行第1行时，JavaScript引擎会先在执行上下文的变量环境中寻找与此函数同名的属性，如果找到，就输出该属性的引用结果。</p>
+<p>执行第2行时，JavaScipt引擎同理在变量环境中查找<code>myname</code>属性，找到后就输出该属性值。</p>
+<p>执行第3行时，会将变量环境中的<code>myname</code>属性的值改为“极客时间”。</p>
+<p>以上就是变量提升在JavaScipt实际编译流程中的实现原理。</p>
+<p>3.代码中出现相同的变量/函数怎么办</p>
+<p>如下列代码所示：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showName</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;极客邦&#x27;</span>);<br>&#125;<br>showName();<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showName</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;极客时间&#x27;</span>);<br>&#125;<br>showName(); <br></code></pre></td></tr></table></figure>
+
+<p>实际上在编译阶段获取变量环境时就会将已有的showName属性在第一次定义后进行第二次修改，或者是覆盖第一次定义。所以实际运行时两个函数输出的结果是相同的，都是‘极客时间’。</p>
+<p>2.调用栈</p>
+<p>上面一节通过变量提升的概率了解了JavaScipt引擎的编译过程，接下来具体深入该过程，这一节了解的是调用栈这一概念。</p>
+<p>2.1 什么是函数调用</p>
+<p>函数调用就是运行一个函数，如下列代码所示：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-selector-tag">var</span> <span class="hljs-selector-tag">a</span> = <span class="hljs-number">2</span><br>function add()&#123;<br><span class="hljs-selector-tag">var</span> <span class="hljs-selector-tag">b</span> = <span class="hljs-number">10</span><br>return  a+<span class="hljs-selector-tag">b</span><br>&#125;<br><span class="hljs-function"><span class="hljs-title">add</span><span class="hljs-params">()</span></span><br></code></pre></td></tr></table></figure>
+
+<p>其中<code>add()</code>就是一个函数调用。根据这段代码按照上一节所学的可以知道，再进行add函数调用前会创建执行上下文，其中包括了变量环境，但这就涉及到了全局变量和局部变量的问题，在函数内部定义的变量又是怎么进行执行上下文创建的呢。</p>
+<p>这就是一个顺序问题，首先获得这段JavaScript代码，JavaScript引擎会先创建一个全局执行上下文。在全局执行上下文中有变量环境如下所示：</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">VariableEnvironment：<br>    <span class="hljs-keyword">a</span> -&gt; underfined,<br>    <span class="hljs-built_in">add</span> -&gt; <span class="hljs-function"><span class="hljs-keyword">function</span>: &#123;</span><br>    var b=<span class="hljs-number">10</span><br>    <span class="hljs-literal">return</span> <span class="hljs-keyword">a</span>+b<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>搭建好全局的执行上写文后就进行全局的可执行代码执行，此时调用add函数，又要建立函数内的执行上下文，函数内的环境变量如下所示：</p>
+<figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs xl">VariableEnvironment：<br>    <span class="hljs-function"><span class="hljs-title">b</span> -&gt;</span> underfined<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>然后再执行函数内的可执行代码。具体的流程如下图所示：</p>
+<p><img   class="lazyload" data-original="/images/react/2021122705.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>这其中就需要建立两个执行上下文，但JavaScript是怎么不把它们弄混的呢？这就涉及到了栈的概念。栈就是一种先入后出的结构。</p>
+<p>2.2 什么是JavaScript的调用栈</p>
+<p>JavaScript引擎就是利用栈的结构来管理执行上下文的，在执行上下文创建好后会将其压入栈中，这样的栈就叫做调用栈。</p>
+<p>看下面这段代码：</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs ada">var a = <span class="hljs-number">2</span><br><span class="hljs-keyword">function</span> <span class="hljs-title">add</span>(b,c)&#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-type">b+c</span><br>&#125;<br><span class="hljs-keyword">function</span> <span class="hljs-title">addAll</span>(b,c)&#123;<br>var d = 10<br>result = add(b,c)<br><span class="hljs-keyword">return</span>  <span class="hljs-type">a+result+d</span><br>&#125;<br>addAll(<span class="hljs-number">3</span>,<span class="hljs-number">6</span>)<br></code></pre></td></tr></table></figure>
+
+<p>这段代码的执行过程为</p>
+<p>第一步，创建全局上下文，并将其压入栈底，如下图所示：</p>
+<p><img   class="lazyload" data-original="/images/react/2021122706.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>然后执行全局代码。</p>
+<p>当运行到调用addAll函数时进行第二步，创建该函数的执行上下文，并将其压入栈中，如下图所示：</p>
+<p><img   class="lazyload" data-original="/images/react/2021122707.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>之后就进入该函数代码的执行阶段。</p>
+<p>当执行到add函数的调用语句时就进行到第三步，为其创建执行上下文，并压入栈中，如下图所示：</p>
+<p><img   class="lazyload" data-original="/images/react/2021122708.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>当ad函数返回时，调用栈会将顶部的执行上下文弹出，然后继续执行，直到返回到只剩下全局执行上下文为止。调用栈是JavaScript引擎追踪函数执行的一个机制，当一次有多个函数被调用时，通过调用栈就能追踪到哪个函数正在被执行以及各函数之间的调用关系。</p>
+<p>2.3 在开发中使用调用栈</p>
+<p>利用浏览器查看调用栈：比如打开Chrome的开发者工具，在Sources中打开页面，在相关的JavaScript上设置断点，并且刷新运行，然后在右侧的call stack中就可以看到调用栈。如下图所示。</p>
+<p><img   class="lazyload" data-original="/images/react/2021122709.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>在call stack中最底层的(anonymous)就是全局执行上下文。</p>
+<p>使用<code>console.trace()</code>来输出当前函数的调用关系，如下段代码所示：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-selector-tag">var</span> <span class="hljs-selector-tag">a</span> = <span class="hljs-number">2</span><br>function add(<span class="hljs-selector-tag">b</span>,c)<br>&#123; console<span class="hljs-selector-class">.trace</span>()<span class="hljs-comment">//输出当前函数的调用关系</span><br>  return b+c<br>&#125;<br>function addAll(<span class="hljs-selector-tag">b</span>,c)&#123;<br><span class="hljs-selector-tag">var</span> d = <span class="hljs-number">10</span><br>result = add(<span class="hljs-selector-tag">b</span>,c)<br>return  a+result+d<br>&#125;<br><span class="hljs-function"><span class="hljs-title">addAll</span><span class="hljs-params">(<span class="hljs-number">3</span>,<span class="hljs-number">6</span>)</span></span><br></code></pre></td></tr></table></figure>
+
+<p>上面代码的输出结果如下图所示。</p>
+<p><img   class="lazyload" data-original="/images/react/2021122710.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>2.3 栈溢出</p>
+<p>需要知道的是调用栈是有大小的，所以当栈内的执行上下文数量超过一定值时，JavaScript引擎就会报错，这种情况就叫做栈溢出。</p>
+<p>如下段代码所示：</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs ada"><span class="hljs-keyword">function</span> <span class="hljs-title">division</span>(a,b)&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-type">division(a,b)</span><br>&#125;<br>console.log(division(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>))<br></code></pre></td></tr></table></figure>
+
+<p>执行后会出下如图所示报错：</p>
+<p><img   class="lazyload" data-original="/images/react/2021122711.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>解决栈溢出的问题是尽量避免回调函数的方法，可以使用循环语句来代替回调函数。</p>
+<p>如下端代码所示：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">runStack</span> (<span class="hljs-params">n</span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (n === <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">100</span>;<br>  <span class="hljs-keyword">return</span> runStack( n- <span class="hljs-number">2</span>);<br>&#125;<br>runStack(<span class="hljs-number">50000</span>)<br><span class="hljs-comment">//这段代码就会产生栈溢出的问题，可以进行以下优化</span><br><br><br><span class="hljs-comment">// 优化</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">runStack</span>(<span class="hljs-params">n</span>) </span>&#123;<br>    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>        <span class="hljs-keyword">if</span> (n === <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">100</span>;<br>        &#125;<br><br>        <span class="hljs-keyword">if</span> (n === <span class="hljs-number">1</span>) &#123; <span class="hljs-comment">// 防止陷入死循环</span><br>            <span class="hljs-keyword">return</span> <span class="hljs-number">200</span>;<br>        &#125;<br><br>        n = n - <span class="hljs-number">2</span>;<br>    &#125;<br>&#125;<br><br><span class="hljs-built_in">console</span>.log(runStack(<span class="hljs-number">50000</span>));<br></code></pre></td></tr></table></figure>
+
+<p>上面这段代码的优化就是使用了while循环来代替了递归函数。</p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>十六太</li>
+    <li><strong>本文链接：</strong><a href="https://sixteentime.github.io/2021/12/27/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%ADJavaScript%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/index.html" title="https:&#x2F;&#x2F;sixteentime.github.io&#x2F;2021&#x2F;12&#x2F;27&#x2F;%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%ADJavaScript%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6&#x2F;index.html">https:&#x2F;&#x2F;sixteentime.github.io&#x2F;2021&#x2F;12&#x2F;27&#x2F;%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%ADJavaScript%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95/" rel="tag">前端面试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" rel="tag">浏览器</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a href="/2021/12/27/%E4%BA%8C%E9%9B%B6%E4%BA%8C%E4%B8%80%E5%B9%B4%E5%8D%81%E4%BA%8C%E6%9C%88%E4%BA%8C%E5%8D%81%E4%B8%83%E6%97%A5/"><i class="iconfont iconleft"></i>二零二一年十二月二十七日</a>
+    <a href="/2021/12/25/%E4%BA%8C%E9%9B%B6%E4%BA%8C%E4%B8%80%E5%B9%B4%E5%8D%81%E4%BA%8C%E6%9C%88%E4%BA%8C%E5%8D%81%E4%BA%94%E6%97%A5/">二零二一年十二月二十日<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="https://github.com/sixteentime "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a><a 
+        href="mailto:1476827275@163.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+    <div class="fab fab-like">
+      <i class="iconfont iconheart"></i>
+    </div>
+  
+  
+    <div class="fab fab-daovoice">
+      <i class="iconfont iconcomment"></i>
+    </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'QDLldNrn5PdbTkPouKxy9MTL-gzGzoHsz',
+      appKey: 'SMKzGNQEHmaffzyfgV05h8eL',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const Counter = AV.Object.extend("Counter");
+    const Like = AV.Object.extend("Like");
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud-counter").each(async (e) => {
+        const url = $(".leancloud-counter").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud-counter").eq(e).text(count ? count : 0);
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud-counter").length === 1 ? $(".leancloud-counter").attr('id').trim() : 'https://sixteentime.github.io';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    const showLike = (Like) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud-like").each(async (e) => {
+        const url = $(".leancloud-like").eq(e).attr('id').trim();
+        const query = new AV.Query("Like");
+        query.equalTo("path", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud-like").eq(e).text(count ? count : 0);
+      });
+    }
+
+    const addLike = (Like) => {
+      const url = $(".leancloud-like").length === 1 ? $(".leancloud-like").attr('id').trim() : 'https://sixteentime.github.io';
+      var query = new Like;
+      query.save({
+        path: url,
+        nickName: 'Anonymous'
+      });
+      $(".leancloud-like").addClass('islike');
+      $(".fab-like").children(".iconfont").removeClass("iconheart").addClass("iconheart-fill").css("color", "#eb3223");
+      ZHAOO.zui.message({ text: '爱你哦~', type: 'success' });
+      setTimeout(() => showLike(Like), 1000);
+    }
+
+    const handleLikeClick = () => {
+      const isLike = $(".leancloud-like").length === 1 && $(".leancloud-like").hasClass('islike') ? true : false;
+      if (isLike) {
+        ZHAOO.zui.message({ text: '小心心不可以收回呢~', type: 'warning' });
+      } else {
+        addLike(Like);
+      }
+    }
+
+    $(function () {
+      addCount(Counter);
+      showCount(Counter);
+      showLike(Like);
+      $(".fab-like").on("click", function () {
+        handleLikeClick();
+      });
+    });
+
+  });
+</script>
+
+
+
+  
+
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i["DaoVoiceObject"] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    a.charset = "utf-8";
+    m.parentNode.insertBefore(a, m)
+  })(window, document, "script", "https://widget.daovoice.io/widget/0f81ff2f.js", "daovoice")
+  daovoice('init', {
+    app_id: "832fad8c"
+  }, {
+    launcher: {
+      disableLauncherIcon: true,
+    },
+  });
+  daovoice('update');
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
