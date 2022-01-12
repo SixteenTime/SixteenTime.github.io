@@ -158,6 +158,79 @@
       </tags>
   </entry>
   <entry>
+    <title>V8工作原理</title>
+    <url>/2022/01/11/V8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/</url>
+    <content><![CDATA[<hr>
+<p><em>本文来源于<a href="http://interview.poetries.top%EF%BC%8C%E7%84%B6%E5%90%8E%E5%9C%A8%E9%98%85%E8%AF%BB%E8%BF%87%E7%A8%8B%E4%B8%AD%E5%8F%91%E7%8E%B0%E8%BF%99%E6%98%AF%E5%87%BA%E4%BA%8E%E6%9E%81%E5%85%89%E8%AF%BE%E7%A8%8B%5B%E3%80%8A%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E8%B7%B5%E3%80%8B_-%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4%5D(https://time.geekbang.org/column/intro/216)%E3%80%82%E6%9C%AC%E6%96%87%E7%AB%A0%E6%98%AF%E5%9C%A8%E9%98%85%E8%AF%BB%E8%AF%A5%E8%B5%84%E6%96%99%E6%97%B6%E7%9A%84%E7%AC%94%E8%AE%B0%E6%95%B4%E7%90%86%EF%BC%8C%E6%9C%89%E9%83%A8%E5%88%86%E7%9B%B4%E6%8E%A5%E6%90%AC%E8%BF%90%E5%8E%9F%E6%96%87%EF%BC%8C%E4%BE%B5%E5%88%A0%E3%80%82">http://interview.poetries.top，然后在阅读过程中发现这是出于极光课程</a><a href="https://time.geekbang.org/column/intro/216">《浏览器工作原理与实践》_-极客时间</a>。本文章是在阅读该资料时的笔记整理，有部分直接搬运原文，侵删。</em></p>
+<hr>
+<p>V8是谷歌团队研发的一种JavaScript引擎。本文将从数据存储、数据回收、编译机制三个角度来分析JavaScript。</p>
+<h2 id="1-数据存储"><a href="#1-数据存储" class="headerlink" title="1.数据存储"></a>1.数据存储</h2><h3 id="1-1-JavaScript是什么类型的语言"><a href="#1-1-JavaScript是什么类型的语言" class="headerlink" title="1.1 JavaScript是什么类型的语言"></a>1.1 JavaScript是什么类型的语言</h3><p>如C语言、Java语言就是在定义变量时就<u>需要声明变量类型</u>的语言，这种语言称为<u>静态语言</u>，像Python、JavaScript语言就是定义变量时无需声明变量类型的语言，这种语言叫做<u>动态语言</u>。如下段代码就是静态语言和动态语言的案例对比。</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><code class="hljs csharp"><span class="hljs-comment">//静态语言-C语言</span><br><span class="hljs-function"><span class="hljs-built_in">int</span> <span class="hljs-title">main</span>(<span class="hljs-params"></span>)</span><br>&#123;<br>   <span class="hljs-built_in">int</span> a = <span class="hljs-number">1</span>;<br>   <span class="hljs-built_in">char</span>* b = <span class="hljs-string">&quot; 极客时间 &quot;</span>;<br>   <span class="hljs-built_in">bool</span> c = <span class="hljs-literal">true</span>;<br>   <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-comment">//动态语言-JavaScript语言</span><br><span class="hljs-keyword">var</span> a=<span class="hljs-number">1</span><br>console.log(a,<span class="hljs-keyword">typeof</span>(a))<br></code></pre></td></tr></table></figure>
+
+<p>如C语言、JavaScript语言又可称为<u>弱类型语言</u>，弱类型语言是指可以<u>支持隐式类型转换</u>的语言。反之，不支持隐式类型转换的语言就是<u>强类型语言</u>，如Java、Python。</p>
+<p>所以，JavaScript是一种动态的、弱类型的语言。</p>
+<h3 id="1-2-JavaScript的数据类型"><a href="#1-2-JavaScript的数据类型" class="headerlink" title="1.2 JavaScript的数据类型"></a>1.2 JavaScript的数据类型</h3><p>JavaScript一共有<u>8种</u>数据类型，这8种类型可以分为两大类型，分别是<u>基础类型（原始类型）和引用类型</u>。基础类型包括Boolean布尔类型、Null空值、Underfined未定义类型、Nubmber基于IEEE754标准的双精度64位数据类型、BigInt可以曹处Number的安全整数范围限制的新的数据类型、String文本类型、Symbol符号类型不可修改且唯一。引用类型的数据只有一种即<u>Object对象类型</u>。</p>
+<p>其中要注意的是，使用typeof方法检测Null类型时返回的是Object（这是一个JavaScript一直以来的Bug）；Object类型是一种由基础类型组成的包含了key-value对的数据类型；基础数据类型和原始数据类型存储的位置不同。</p>
+<h3 id="1-3-内存空间"><a href="#1-3-内存空间" class="headerlink" title="1.3 内存空间"></a>1.3 内存空间</h3><p>JavaScript运行时需要利用内存来存储数据，其中可以将内存分为三个部分分别是<u>代码空间</u>——用来存储可执行代码，<u>栈空间</u>——用来存储执行上下文，以及<u>堆空间</u>。</p>
+<p>栈空间用来存储可执行上下文，一般基础数据都直接存储在栈中，而Object数据由于其往往需要占较大内存所以会将其存储在堆中，栈中只存储其内存地址。一般而言，栈空间的大小都是较小的，因为栈空间若是较大，则释放或添加执行上下文则会调用更大的时间，而堆空间一般较大，也可以存储更多的数据。</p>
+<h3 id="1-4-再谈闭包"><a href="#1-4-再谈闭包" class="headerlink" title="1.4 再谈闭包"></a>1.4 再谈闭包</h3><p>以下这段代码涉及到了闭包。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-keyword">var</span> myName = <span class="hljs-string">&quot; 极客时间 &quot;</span><br>    <span class="hljs-keyword">let</span> test1 = <span class="hljs-number">1</span><br>    <span class="hljs-keyword">const</span> test2 = <span class="hljs-number">2</span><br>    <span class="hljs-keyword">var</span> innerBar = &#123; <br>        <span class="hljs-attr">setName</span>:<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">newName</span>)</span>&#123;<br>            myName = newName<br>        &#125;,<br>        <span class="hljs-attr">getName</span>:<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<br>            <span class="hljs-built_in">console</span>.log(test1)<br>            <span class="hljs-keyword">return</span> myName<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> innerBar<br>&#125;<br><span class="hljs-keyword">var</span> bar = foo()<br>bar.setName(<span class="hljs-string">&quot; 极客邦 &quot;</span>)<br>bar.getName()<br><span class="hljs-built_in">console</span>.log(bar.getName())<br></code></pre></td></tr></table></figure>
+
+<p>按道理，foo函数中的 <code>myName</code>、<code>test1</code>变量都是基础数据，应该直接存储在栈中，而随着foo函数执行完毕也会随之销毁，那么闭包又是怎么形成的呢？这就要分析这段代码的执行流程。</p>
+<p>首先JavaScript引擎执行foo函数时，会先编译，并创建一个空的执行上下文，编译过程中，遇到<code>setName</code>内部函数时会对其进行<u>一次快速的词法扫描</u>，发现在内部函数中遇到了其外部函数中定义的变量，JavaScript引擎就会判断这是一个闭包，就会在堆空间中创建一个<u>closure(foo)</u>的对象来存储相关变量。同理在<code>getName</code>函数中也会将<code>test1</code>变量存储在堆中对应位置。这样即使foo函数的执行上下文被移除，闭包中的变量也可以保留。</p>
+<h2 id="2-垃圾回收"><a href="#2-垃圾回收" class="headerlink" title="2.垃圾回收"></a>2.垃圾回收</h2><p>有一些数据使用之后就不再需要，我们将这些数据称为<u>垃圾数据</u>，不同语言都有不同的垃圾回收政策，对于JavaScript语言则有一个<u>自动垃圾回收策略</u>。</p>
+<h3 id="2-1-调用栈中的数据回收"><a href="#2-1-调用栈中的数据回收" class="headerlink" title="2.1 调用栈中的数据回收"></a>2.1 调用栈中的数据回收</h3><p>和操作系统中涉及到的栈结构相似，调用栈是利用<u>ESP指针</u>（永远指向栈顶的指针）来进行数据回收，因为栈是一种先入后出的结构，栈顶的数据是最先废弃掉的，所以通过移动ESP指针来确定栈顶的位置，ESP指针以上的部分就是被回收的可以重新覆盖的数据区域。</p>
+<h3 id="2-2-堆中的数据如何回收"><a href="#2-2-堆中的数据如何回收" class="headerlink" title="2.2 堆中的数据如何回收"></a>2.2 堆中的数据如何回收</h3><p>在回收栈数据中，有一些数据类似Object数据是存储在堆中的，所以即使回收掉栈中的数据，堆中这些垃圾数据依旧没有被处理，那么这些数据该如何处理呢？这要涉及到<u>代际假说</u>的概念。</p>
+<p>代际假说有<u>两个特点</u>，分别是大部分对象在对村中存在时间很短，很多对象一经分配内存就会变得不可访问，第二个特点是不死的对象会活很久。</p>
+<p>代际假说适用于大多数的<u>动态语言</u>。V8通过将堆分为<u>新生代和老生代</u>两个区域，分别使用<u>副垃圾回收器和主垃圾回收器</u>来实现垃圾回收。</p>
+<h3 id="2-3-垃圾回收器的工作流程"><a href="#2-3-垃圾回收器的工作流程" class="headerlink" title="2.3 垃圾回收器的工作流程"></a>2.3 垃圾回收器的工作流程</h3><p>V8的两个垃圾回收器拥有一套共同的执行流程。</p>
+<p>第一步：标记空间中活动对象和非活动对象，活动对象就是还在使用的对象。</p>
+<p>第二步：回收非活动对象所占据的内存。</p>
+<p>第三步：进行内存整理，一般在回收对象后，内存中会出现大量不连续的空间，如果需要分配较大连续空间时就会出现内存不足的情况，所以需要进行内存整理。而整理<u>内存碎片</u>其实只在老生代中会进行，使用副垃圾回收器无需再新生代进行此步骤。</p>
+<p><strong>副垃圾回收器</strong>：主要负责新生区的垃圾回收，通常情况，大多数<u>小的对象</u>都会被分配到新生区，所以该区域虽然不大但是使用频繁。新生区又对半分为对象区域和空间区域。如下图所示为堆的结构图：</p>
+<p><img src="/images/react/2022011102.png"></p>
+<p>新加入的对象会被放入对象区域，当对象区域被写满时，则需要执行一次垃圾清理操作。</p>
+<p>在垃圾回收过程，首先要对对象进行标记，标记完成后会将存货的对象<u>复制</u>到空闲区域，并且将它们<u>有序排列</u>起来，这个过程也相当于完成了<u>内存整理</u>工作。完成复制后会将对象区域和空闲区与进行<u>角色翻转</u>，原来被填满的对象区域变成了空闲区域。以此这样反复循环的使用就是在新生代中采用的<u>Scavenge算法</u>。</p>
+<p>由于新生区的空间不大，很容易就被存活对象装满整个区域，所以JavaScript引擎采用了<u>对象晋升策略</u>，将两次垃圾回收仍然存活的新生区对象转移到老生区中。</p>
+<p><strong>主垃圾回收器</strong>：主要负责老生区中的垃圾回收，对比于新生区，它的对象总是<u>占用较大空间或者是存活时间较长</u>。</p>
+<p>因为老生区空间较大不适合采用Scavenge算法，其采用了<u>标记-清除（Mark-Sweep）算法</u>进行垃圾回收。</p>
+<p>比如，当调用栈中要移除顶部的执行上下文后，就会进行一次数据扫描——此时便利调用栈，发现找不到相应堆中某数据的引用地址，则会标记堆中该数据为垃圾数据，标记完垃圾数据后就是清除阶段，直接清除被标记为垃圾数据的数据，然后采用<u>标记-整理（Mark-Compact）算法</u>进行内存整理。具体的老生区标记清除过程和标记整理过程如下两张图所示。</p>
+<p><img src="/images/react/2022011103.png"></p>
+<p><img src="/images/react/2022011104.png"></p>
+<h3 id="2-4-全停顿"><a href="#2-4-全停顿" class="headerlink" title="2.4 全停顿"></a>2.4 全停顿</h3><p>我们已经知道V8是如何进行垃圾回收的，但由于JavaScript是运行在主线程上，一旦执行垃圾回收算法，就需要暂停其他正在执行的JavaScript脚本，直到垃圾回收执行完毕才能继续执行脚本，这种行为叫做<u>全停顿（Stop-The-World）</u>。</p>
+<p>全停顿总是会消耗一定时间导致<u>页面卡顿</u>的问题，为了解决这样的现象V8将主垃圾回收器的标记过程分为一个个的<u>子标记</u>过程，让这些块过程和JS脚本交叉运行，这个算法叫做<u>增量标记（Incremental Marking)算法</u>。</p>
+<h2 id="3-代码编译"><a href="#3-代码编译" class="headerlink" title="3.代码编译"></a>3.代码编译</h2><p>要深入理解V8的工作原理，需要理解一些概念和原理，比如接下来要详细介绍的<u>编译器(Compiler)、解释器(Interpreter)、抽象语法树(AST）、字节码(Bytecode)、及时编译器(JIT)</u>。</p>
+<h3 id="3-1-编译器和解释器"><a href="#3-1-编译器和解释器" class="headerlink" title="3.1 编译器和解释器"></a>3.1 编译器和解释器</h3><p>从程序员能够理解的高级语言到机器能够理解的机器语言之间需要使用到编译器/解释器来进行语言的转换。如C/C++、GO等是通过编译器来解析语言的<u>编译型语言</u>；如Python、JavaScript等则是通过解释器来解析语言的<u>解释型语言</u>。以下是编译器和解析器翻译代码的过程图。</p>
+<p><img src="/images/react/2022011105.png"></p>
+<p>从图中你可以看出这二者的执行流程，大致可阐述为如下：</p>
+<p>在编译型语言的编译过程中，编译器首先会依次对源代码进行词法分析、语法分析，生成抽象语法树（AST），然后是优化代码，最后再生成处理器能够理解的机器码。如果编译成功，将会生成一个可执行的文件。但如果编译过程发生了语法或者其他的错误，那么编译器就会抛出异常，最后的二进制文件也不会生成成功</p>
+<p>在解释型语言的解释过程中，同样解释器也会对源代码进行词法分析、语法分析，并生成抽象语法树（AST），不过它会再基于抽象语法树生成字节码，最后再根据字节码来执行程序、输出结果。</p>
+<h3 id="3-2-V8执行一段JavaScript代码过程"><a href="#3-2-V8执行一段JavaScript代码过程" class="headerlink" title="3.2 V8执行一段JavaScript代码过程"></a>3.2 V8执行一段JavaScript代码过程</h3><p>如图所示为V8执行一段JavaScript代码的流程图。</p>
+<p><img src="/images/react/2022011106.png"></p>
+<p>第一步：源代码生成<u>抽象语法树</u>和执行上下文。</p>
+<p>这个步骤相当于Html文件转化为浏览器可以理解的DOM树情况雷系，Javascript也是要转化为计算机能够理解的AST结构。这个过程分别运用到了<u>词法分析</u>和<u>语法分析</u>。</p>
+<p>第二步：<u>解释器Lgnition</u>根据AST生成<u>字节码</u>。</p>
+<p>第三步：判断是否为<u>热点代码(HotSpot)</u>，如果不是则将字节码放入<u>解释器</u>逐条解释执行，如果是则将字节码放入<u>JIT编译器</u>编译成高效的机器码来执行。这样能够提高代码的整体执行效率。</p>
+<h3 id="3-3-JavaScript的性能优化"><a href="#3-3-JavaScript的性能优化" class="headerlink" title="3.3 JavaScript的性能优化"></a>3.3 JavaScript的性能优化</h3><p>主要关注以下三个方面。</p>
+<ul>
+<li><p>提升但此脚本的执行速度，避免JavaScript的长任务霸占主线程，这样可以使得页面快速响应交互。</p>
+</li>
+<li><p>避免大的内联脚本，因为在解析HTML的过程中，解析和编译也会占用主线程。</p>
+</li>
+<li><p>减少JavaScript文件容量，因为更小的文件会提升下载速度，并且占用更低的内存。</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>浏览器</category>
+      </categories>
+      <tags>
+        <tag>浏览器</tag>
+        <tag>JavaScript</tag>
+        <tag>前端面试</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>React的状态提升&amp;组合VS继承</title>
     <url>/2021/12/19/React%E5%AD%A6%E4%B9%A0%E5%9B%9B/</url>
     <content><![CDATA[<h3 id="一、状态提升"><a href="#一、状态提升" class="headerlink" title="一、状态提升"></a>一、状态提升</h3><p>通常，多个组件需要反应同一个数据变化时，建议使用状态提升，即共享状态提升到最近的父组件中</p>
@@ -189,6 +262,27 @@
         <tag>学习</tag>
         <tag>React</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>一封信</title>
+    <url>/2022/01/12/%E4%B8%80%E5%B0%81%E4%BF%A1/</url>
+    <content><![CDATA[<p>我时常在浪漫和理智中徘徊。</p>
+<p>一个在浪漫和理智中徘徊的人到底是一个理想主义者还是现实主义者呢？</p>
+<p>我总是对自己说：别写这么傻的信，即使你看了也只会扫上两眼然后对别人说：XXX给我写了一封无聊的东西。最后用草稿纸的背面写几个字回我。</p>
+<p>此外，时间过去很久了，久到我似乎没有理由写这样的信，久到这封信变得不是为你写的，而是为我自己写的。可是，写来写去也是欺骗自己，为自己打造一副自己情深的可笑场面。因为我明明已经释然了已经习惯了却偏偏还要回忆。</p>
+<p>前天晚上梦见了你，以前，三年前的时候，我每次梦见你都会在备忘录上记下一笔，不过后来梦见你的次数实在太多了，也就没再记录。前天我梦见，你对你的专业不满意，你想要转专业，你转了我这个专业，又和我一起读书了。大概是因为我有基础吧，老师总是表扬我，然后你也对我刮目相看，我在梦里想：现在你应该注意到我了，我该找个什么机会和你自然地和好呢。</p>
+<p>其实每一次梦见你都是这样的，每一次我都想在梦里与你和好，有几次和好成功了，有几次正在试探中，有几次非常浪漫，有一次的梦里，我要回高中处理一些事情，我抬头看到了宛如极光的天空，我发出感慨，朝着这绚烂的天边走去，然后我遇见了也在抬头看天的你。有一次的梦里，你主动来和好，我真开心，第二天我们一起吃早饭，我问你：为什么想要和好呢？你说：因为你是主角啊（因为是在你的梦里啊），然后突然意识到自己是在做梦。有一次的梦非常真实，我已经忘记了到底梦见什么，不外乎我们和好了，我太高兴了，高兴到在梦中反复询问这不会是在做梦吧这不会是在做梦吧，然后我突然被闹钟吵醒了，从混沌到彻底清醒的那段时间似乎变得很漫长，我的心脏从开始的狂跳不止逐渐恢复正常，然后就是失望、心灰意冷、一种无法相信那竟然只是梦的质疑。</p>
+<p>2017年的时候，我写过一封表白信给你，发送出去了的，给十年后的你，前段日子我再次浏览那个网站的时候，发现有追溯以前信件的功能，我搜了一下，发现我写给你的信失踪了。没有逃过一劫的窃喜，只有遗憾。虽然打扰未来的你是一件不太负责任的事情，但我还是希望那份心意能沿着时空隧道传到未来的你那里。2017年秋天的那个晚上，我写了又删，小心翼翼打下一个个幼稚的文字（现在隐约记得，是蛮幼稚和天真的），选择的时间是十年后，填写的收件人邮箱是你的QQ邮箱，然后我点了公开信。我还以为公开信是对方收到信后才公开，可是我点击发送后就在公开列表中看到了它。</p>
+<p>非常慌张，我害怕被你看到，我只要一考虑到有这个可能性，一考虑到你有可能会看到，一想到如果你那时就看了我们也许连朋友都做不了，我就慌张地不知所措，然后我就非常笨拙地写下了几十封上百封的公开信吧，收件人一开始是我的邮箱，然后是不知道是谁的邮箱，信的内容也是乱七八糟的复制粘贴的，那一天我大概花了四五个小时都在写公开信，只是想把我写给你的那封信隐藏在角落里。即使这样，我还是不放心，我记得那个时候已经是早上四点了，我找到了网站开发者的微博账号，在账号上私信他，发了很多很多骚扰文字，然后终于还是睡着了，醒来后第一件事就是看微博私信，收到他的回复：已删——我才松了一口气。</p>
+<p>可是，没想到他是把这封信彻底删了。我好遗憾啊。</p>
+<p>我为什么就喜欢上你了呢？回忆已经被美化滤镜过滤了一遍，我偶尔回忆起来的也只是你很美好这件事了，现在我回忆起你的时间越来越短，回忆的内容也越来越单薄，过去，不知道是前年还是去年的时候，我突然回忆起关于你的什么事情来，然后一阵恍惚，因为我意识到我已经忘记了好多好多回忆了，是很难受的，我不希望忘记这些回忆。</p>
+<p>还是说现在的事情吧，也许是因为我不知道怎么去讲述我过去对你的感情，我担心你不会想听的，因为，我在那段时间里总是在悲伤中、痛苦中、嫉妒中。</p>
+<p>昨天我在b站上看到了一个刚刚从失恋中走出来的up主发的新视频，她说她失恋时非常地痛苦，让我突然觉得我那时的痛苦好像变得无所谓了，因为不是只有我一个人经历过这样的痛苦，也许百分之五十的人都会经历过，这样就显得我的过去是一段很寻常的往事。可是我还是会觉得，我和那个up主是不一样的，因为我喜欢的人比她喜欢的人要好很多。大概是因为我一直都是暗恋你的缘故吧，所以你真的变得无比美好了，不，即使排除这些区别，你也比别人好上很多，你真的无比美好，我现在还是觉得你是我应该追逐的存在。我以前做了很多很多愚蠢的事情，比方说我为了给你一个人写明信片，我会给全班交好的女生都写上一张明信片，大概这样就能隐藏我对你的情感了吧。</p>
+<p>如果我记得没错的话，那张明信片上其实只有一句话：遇见你是一件很幸运的事情。一开始是写满了整张明信片的文字，只有最后一句是这句话，我觉得文字太多显得我絮叨，就重写了一张，写着写着，换了很多明信片，变得只剩下这一句话了。又因为我的字实在是不好看，这句话我也写了好几遍。但是，即使是现在我也想对你说：谢谢你，遇见你是一件很幸运的事。</p>
+<p>我翻高中的日记，我在日记里是这样形容我对你的感情：我确定我对她的感情不是爱情，因为爱情可能会冷淡但是我对她的感情永远也不会改变。不过我还是偷偷写了很多表白信给你，不是写给未来的你，是写给那时的你。有一阵子，我每天都在被子里练字——是写表白信，只是白天总是不敢交给你而已。不过那都是高三后面的事情了，我和你“绝交”时的事情了。我很早就对你有了超过友谊的情感，有一天晚上我突然梦见你对我表白，让我意识到我喜欢上你了，当然我是害怕的，我那时更傻，女生喜欢女生对于我来说是很不可思议的事情，我下意识地忽略和遗忘这件事，所以那段时间很多情况我自己都没有意识到我在做什么。现在想想真好笑，我甚至还在无意间和你表白过，那句话太露骨了，其实就等于表白了，可是我是出自真心说出的，完全不加思考，当时也完全意识不到这句话意味着什么。</p>
+<p>对不起，对不起，真的很对不起，我突然想起了很多画面，我想起了你的眼神，我想起了你对我说的话，你大概是知道我喜欢你的，甚至不需要大概，你就是知道我喜欢你吧，也许不只是你，其他人也多少意识到了，那时我真的很傻，我喜欢一个人，但是我完全不知道该怎么表达自己的喜欢，完全不知道要怎么去追求她，谢谢你，真的谢谢你，我觉得我是应该满足了，我真后悔那次毕业散伙饭我没有穿的好看一点。谢谢你。</p>
+<p>你就是我的莉拉，我是莱农，我是爱上莉拉的莱农，真可惜她们两个人走散了，也许不再相聚了，可是，莱农是因为莉拉才变成莱农的。谢谢你。</p>
+]]></content>
   </entry>
   <entry>
     <title>二零二一年十二月二十七日</title>
@@ -262,15 +356,12 @@
       </tags>
   </entry>
   <entry>
-    <title>二零二一年十二月十七日</title>
-    <url>/2021/12/17/%E4%BA%8C%E9%9B%B6%E4%BA%8C%E4%B8%80%E5%B9%B4%E5%8D%81%E4%BA%8C%E6%9C%88%E5%8D%81%E4%B8%83%E6%97%A5/</url>
+    <title>二零二一年十二月十八日</title>
+    <url>/2021/12/18/%E4%BA%8C%E9%9B%B6%E4%BA%8C%E4%B8%80%E5%B9%B4%E5%8D%81%E4%BA%8C%E6%9C%88%E5%8D%81%E5%85%AB%E6%97%A5/</url>
     <content><![CDATA[<hr>
-<p><em>重看《寄生虫》。</em></p>
+<p><em>包书。</em></p>
 <hr>
-<p>喜欢小右的眼睛，好美。</p>
-<p><img src="/images/2021121702.png"></p>
-<p><img src="/images/2021121801.png"></p>
-<p>看完后百感交集，想到这次的新冠，那句共存的口号，以及《素食者》这本书。也许以后可以谈谈。</p>
+<p>包杂志的时候抖出了一堆黑乎乎的玉兰花干片，怪丑的，还蛮多的。不知道我以前抱着什么心情收集的，想要留住玉兰花的美好吗？</p>
 ]]></content>
       <categories>
         <category>日记</category>
@@ -280,12 +371,15 @@
       </tags>
   </entry>
   <entry>
-    <title>二零二一年十二月十八日</title>
-    <url>/2021/12/18/%E4%BA%8C%E9%9B%B6%E4%BA%8C%E4%B8%80%E5%B9%B4%E5%8D%81%E4%BA%8C%E6%9C%88%E5%8D%81%E5%85%AB%E6%97%A5/</url>
+    <title>二零二一年十二月十七日</title>
+    <url>/2021/12/17/%E4%BA%8C%E9%9B%B6%E4%BA%8C%E4%B8%80%E5%B9%B4%E5%8D%81%E4%BA%8C%E6%9C%88%E5%8D%81%E4%B8%83%E6%97%A5/</url>
     <content><![CDATA[<hr>
-<p><em>包书。</em></p>
+<p><em>重看《寄生虫》。</em></p>
 <hr>
-<p>包杂志的时候抖出了一堆黑乎乎的玉兰花干片，怪丑的，还蛮多的。不知道我以前抱着什么心情收集的，想要留住玉兰花的美好吗？</p>
+<p>喜欢小右的眼睛，好美。</p>
+<p><img src="/images/2021121702.png"></p>
+<p><img src="/images/2021121801.png"></p>
+<p>看完后百感交集，想到这次的新冠，那句共存的口号，以及《素食者》这本书。也许以后可以谈谈。</p>
 ]]></content>
       <categories>
         <category>日记</category>
@@ -335,6 +429,102 @@
       <tags>
         <tag>学习</tag>
         <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>正则表达式</title>
+    <url>/2021/12/21/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/</url>
+    <content><![CDATA[<hr>
+<p><em>本文来源于<a href="https://github.com/CyC2018/CS-Notes%EF%BC%8C%E6%98%AF%E5%9C%A8%E9%98%85%E8%AF%BB%E8%AF%A5%E8%B5%84%E6%BA%90%E6%97%B6%E7%9A%84%E7%AC%94%E8%AE%B0%E6%95%B4%E7%90%86%EF%BC%8C%E4%BD%86%E6%9C%89%E5%A4%A7%E9%83%A8%E5%88%86%E7%9A%84%E5%86%85%E5%AE%B9%E5%92%8C%E5%8E%9F%E6%96%87%E4%B8%80%E8%87%B4%E3%80%82%E5%B9%B6%E4%B8%94%E5%9B%A0%E4%B8%BA%E6%9C%AC%E6%AC%A1%E5%A4%8D%E4%B9%A0%E6%98%AF%E4%BA%89%E5%AF%B9%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95%E7%9A%84%E5%87%86%E5%A4%87%EF%BC%8C%E6%89%80%E4%BB%A5%E4%B9%9F%E4%BC%9A%E9%80%89%E6%8B%A9%E6%80%A7%E5%A4%8D%E4%B9%A0%EF%BC%8C%E5%AF%B9%E4%BA%8E%E6%B7%B1%E5%88%BB%E7%9A%84%EF%BC%8C%E8%AE%A1%E7%AE%97%E7%B1%BB%E7%9F%A5%E8%AF%86%E7%82%B9%E5%8F%AA%E4%BC%9A%E7%B2%97%E7%95%A5%E6%89%AB%E8%BF%87">https://github.com/CyC2018/CS-Notes，是在阅读该资源时的笔记整理，但有大部分的内容和原文一致。并且因为本次复习是争对前端面试的准备，所以也会选择性复习，对于深刻的，计算类知识点只会粗略扫过</a></em>。</p>
+<hr>
+<h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h2><p>正则表达式用于文本内容的查找和替换，本身不是一种语言或软件。</p>
+<h2 id="2-匹配单个字符"><a href="#2-匹配单个字符" class="headerlink" title="2.匹配单个字符"></a>2.匹配单个字符</h2><p><code>.</code>用来匹配单个任意字符，是元字符。如果想要匹配字符<code>.</code>，则要在前面加<code>\</code>，即<code>\.</code>，在<code>[]</code>里的<code>.</code>不是元字符。</p>
+<h2 id="3-匹配一组字符"><a href="#3-匹配一组字符" class="headerlink" title="3.匹配一组字符"></a>3.匹配一组字符</h2><p><code>[]</code>定义一个 字符集合，<code>0-9</code>、<code>a-z</code>在<code>[]</code>中表示一个字符区间，用ASCII码确定。<code>^</code>在<code>[]</code>中是取非操作。 <code>abc[^0-9]</code>表示以’abc’开头，并且第四个字符不为数字的字符串。</p>
+<h2 id="4-使用元字符"><a href="#4-使用元字符" class="headerlink" title="4.使用元字符"></a>4.使用元字符</h2><p><code>[\b]</code>是删除一个字符的意思；<code>\f</code>匹配换页符，<code>\n</code>匹配换行符，<code>\r</code>匹配回车符，<code>\t</code>匹配制表符，<code>\v</code>匹配垂直制表符。</p>
+<p><code>\d</code>等价于<code>[0-9]</code>，<code>\D</code>等价于<code>[^0-9]</code>，<code>\w</code>等价于<code>[a-zA-Z0-9_]</code>大小写字母、下划线和数字。<code>\W</code>等价于<code>[^a-zA-Z0-9_]</code>。<code>\s</code>表示任何一个空白字符，等价于<code>[\f\n\r\t\v]</code>，<code>\S</code>表示对<code>\s</code>取非，等价于<code>[^\f\n\r\t\v]</code>。</p>
+<p><code>\x</code>匹配十六进制字符,<code>\0</code>匹配八进制字符，比如<code>\xA</code>对应值为10的ASCII字符，即<code>\n</code>。</p>
+<h2 id="5-重复匹配"><a href="#5-重复匹配" class="headerlink" title="5.重复匹配"></a>5.重复匹配</h2><p><code>+</code>匹配1个或多个字符，<code>*</code>匹配0个或多个字符，<code>?</code>匹配0个或1个字符。</p>
+<p><code>&#123;n&#125;</code>匹配n个字符，<code>&#123;m,n&#125;</code>匹配m~n个字符，<code>&#123;m,&#125;</code>匹配至少m个字符。</p>
+<p><code>[\w]+</code>表示匹配字母数字或下划线很多次，a+c表示1个或多个连续的a加上一个c。</p>
+<p><img src="/images/react/2021122114.png"></p>
+<p><img src="/images/react/2021122115.png"></p>
+<p><code>*</code>和<code>+</code>都是贪婪的，会匹配尽可能多的内容。在后面加?可以转换为懒惰型元字符。</p>
+<p><code>a.+c</code>的匹配结果可以是<code>abcabcabc</code>，即明明前三个字符已经满足匹配结果，但因为<code>+</code>是贪婪的所以会匹配尽可能多的字符。</p>
+<h2 id="6-位置匹配"><a href="#6-位置匹配" class="headerlink" title="6.位置匹配"></a>6.位置匹配</h2><p><code>\b</code>可以匹配一个单词的边界，边界是指位于<code>\w</code>和<code>\W</code>之间的位置，<code>\B</code>匹配一个不是单词边界的位置。这两种匹配的都是位置，而不是字符串，比如<code>\babc\b</code>匹配的结果是3个字符串。</p>
+<p><code>^</code>在字符集合外用作匹配整个字符串的开头，<code>$</code>匹配整个字符串的结尾。</p>
+<p><code>^\s*\/\/.*$</code>的意思是匹配一个开头是0到多个空白字符加上<code>//</code>结尾是1个到多个任意字符的一行字符串，如下图所示：</p>
+<p><img src="/images/react/2021122118.png"></p>
+<h2 id="7-子表达式"><a href="#7-子表达式" class="headerlink" title="7.子表达式"></a>7.子表达式</h2><p><code>(ab)&#123;2,&#125;</code>表示至少两个<code>ab</code>组合元素的字符。可以匹配abab或更多有ab的字符串。</p>
+<p><img src="/images/react/2021122113.png"></p>
+<p><code>|</code>是或元字符，它把左边和右边所有的部分都看成单独的两个部分，两个部分只要有一个匹配就行。比如<code>(19|20)\d&#123;2&#125;</code>的意思是匹配’19‘或’20’开头并且后面有两个任意数字的字符串，如下图所示：</p>
+<p><img src="/images/react/2021122116.png"></p>
+<h2 id="8-回溯引用"><a href="#8-回溯引用" class="headerlink" title="8.回溯引用"></a>8.回溯引用</h2><p>回溯引用使用 <strong>\n</strong> 来引用某个子表达式，其中 n 代表的是子表达式的序号，从 1 开始。它和第n个子表达式匹配的内容一致，比如子表达式匹配到 abc，那么回溯引用部分也需要匹配 abc 。</p>
+<p><code>&lt;(h[1-6])&gt;(\w*?)&lt;\/\1\2&gt;</code>里使用了两个回溯引用，分别引用了第一个表达式和第二个表达式，如下图所示：</p>
+<p><img src="/images/react/2021122117.png"></p>
+<h2 id="9-替换"><a href="#9-替换" class="headerlink" title="9.替换"></a>9.替换</h2><p>正则表达式也可以应用在文本替换上，这需要两个正则表达式，第一个用来查找，第二个用来替换。例如修改电话号码<code>313-555-1234</code>的格式为<code>(313) 555-1234</code>，则需要1.查找电话，正则表达式为<code>(\d&#123;3&#125;)(-)(\d&#123;3&#125;)(-)(\d&#123;4&#125;)</code>，利用子表达式将电话号码的格式划分。2.替换，正则表达式为<code>($1) $3-$5</code>，表示为在第一个子表达式查找的结果加上 () ，然后加一个空格，在第三个和第五个字表达式查找的结果中间加上 - 进行分隔。</p>
+<p><code>\l</code>表示把下一个字符转为小写，<code>\u</code>表示把下一个字符转为大写，<code>\L</code>表示把<code>\L</code>和<code>\E</code>之间的字符全部转为小写，<code>\U</code>表示把<code>\U</code>和<code>\E</code>之间的字符全部转为大写，<code>\E</code>表示结束<code>\L</code>或<code>\U</code>。</p>
+<h2 id="10-前后查找"><a href="#10-前后查找" class="headerlink" title="10.前后查找"></a>10.前后查找</h2><p>前后查找规定了匹配的内容首尾应该匹配的内容，但是又不包含首尾匹配的内容。</p>
+<p>向前查找使用 <code>?=</code> 定义，它规定了尾部匹配的内容，这个匹配的内容在<code>?=</code>之后定义。所谓向前查找，就是规定了一个匹配的内容，然后以这个内容为尾部向前面查找需要匹配的内容。向后匹配用 <code>?&lt;= </code>定义（注: JavaScript 不支持向后匹配，Java 对其支持也不完善）。</p>
+<p>如<code>\w+(?=@)</code>表示查找@字符前面的部分，如图所示：</p>
+<p><img src="/images/react/2021122119.png"></p>
+<h2 id="11-嵌入条件"><a href="#11-嵌入条件" class="headerlink" title="11.嵌入条件"></a>11.嵌入条件</h2><p>条件为某个子表达式是否匹配，如果匹配则需要继续匹配条件表达式后面的内容。</p>
+<p>比如<code>(\()?abc(?(1)\))</code>的意思是，先看第一个表达式即第一个<code>()</code>里的内容为<code>\(</code>，表达式后面有一个<code>?</code>，目前为止的意思是匹配0或1个<code>(</code>，然后匹配字符串<code>abc</code>，然后遇到第二个子表达式，这个表达式为条件表达式，<code>?(1)</code>为条件，表示第一个表达式内容若成立，则需要执行<code>)</code>匹配，如下图所示：</p>
+<p><img src="/images/react/2021122120.png"></p>
+<p><code>?(?=-) </code>为前向查找条件，只有在以 - 为前向查找的结尾能匹配<code>\d&#123;5&#125;</code>，才继续匹配 <code>-\d&#123;4&#125;</code> ，如下图所示：</p>
+<p><img src="/images/react/2021122121.png"></p>
+]]></content>
+      <categories>
+        <category>计算机基础复习</category>
+      </categories>
+      <tags>
+        <tag>学习</tag>
+        <tag>前端面试，正则表达式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库系统原理基础知识点</title>
+    <url>/2021/12/21/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E5%A4%8D%E4%B9%A0/</url>
+    <content><![CDATA[<hr>
+<p><em>本文来源于<a href="https://github.com/CyC2018/CS-Notes%EF%BC%8C%E6%98%AF%E5%9C%A8%E9%98%85%E8%AF%BB%E8%AF%A5%E8%B5%84%E6%BA%90%E6%97%B6%E7%9A%84%E7%AC%94%E8%AE%B0%E6%95%B4%E7%90%86%EF%BC%8C%E4%BD%86%E6%9C%89%E5%A4%A7%E9%83%A8%E5%88%86%E7%9A%84%E5%86%85%E5%AE%B9%E5%92%8C%E5%8E%9F%E6%96%87%E4%B8%80%E8%87%B4%E3%80%82%E5%B9%B6%E4%B8%94%E5%9B%A0%E4%B8%BA%E6%9C%AC%E6%AC%A1%E5%A4%8D%E4%B9%A0%E6%98%AF%E4%BA%89%E5%AF%B9%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95%E7%9A%84%E5%87%86%E5%A4%87%EF%BC%8C%E6%89%80%E4%BB%A5%E4%B9%9F%E4%BC%9A%E9%80%89%E6%8B%A9%E6%80%A7%E5%A4%8D%E4%B9%A0%EF%BC%8C%E5%AF%B9%E4%BA%8E%E6%B7%B1%E5%88%BB%E7%9A%84%EF%BC%8C%E8%AE%A1%E7%AE%97%E7%B1%BB%E7%9F%A5%E8%AF%86%E7%82%B9%E5%8F%AA%E4%BC%9A%E7%B2%97%E7%95%A5%E6%89%AB%E8%BF%87">https://github.com/CyC2018/CS-Notes，是在阅读该资源时的笔记整理，但有大部分的内容和原文一致。并且因为本次复习是争对前端面试的准备，所以也会选择性复习，对于深刻的，计算类知识点只会粗略扫过</a></em>。</p>
+<hr>
+<h2 id="1-事务"><a href="#1-事务" class="headerlink" title="1.事务"></a>1.事务</h2><p>事务是指满足<u>ACID特性</u>的一组操作。ACID特性分别包括以下四个特性：</p>
+<p><strong>原子性</strong>（Atomicity）：事务被视为不可分割最小单元。事务的操作要么全部提交成功，要么全部失败滚回。</p>
+<p><strong>一致性</strong>（Consistency）：数据库在事务执行的前后都保持一致性状态。在一致性状态下，所有事务对同一数据的读取结构是相同的。</p>
+<p><strong>隔离性</strong>（Islation）一个事务所做的修改在最终提交以前，对其他食物不可见。</p>
+<p><strong>持久性</strong>（Durability）一旦事务提交，则其所做的修改将会永远保存在数据库中。即使系统崩溃，事务执行结构也不会丢失。</p>
+<h2 id="2-并发一致性问题"><a href="#2-并发一致性问题" class="headerlink" title="2.并发一致性问题"></a>2.并发一致性问题</h2><p>在并发环境下，事务隔离性很难保证，因此会出现以下并发一致性问题。</p>
+<p><strong>丢失修改</strong>：一个事务的更新操作被另一个事务的更新操作替换，如下图所示：</p>
+<p><img src="/images/react/2021122103.png"></p>
+<p><strong>读脏数据</strong>：当前事务可以读到另外事务未提交的数据，如下图所示：</p>
+<p><img src="/images/react/2021122104.png"></p>
+<p><strong>不可重复读</strong>：在一个事务内多次读取同一数据，期间该数据被另一事务进行了修改，会导致重复读统一数据的结果不一致，如下图所示：</p>
+<p><img src="/images/react/2021122105.png"></p>
+<h2 id="3-封锁"><a href="#3-封锁" class="headerlink" title="3.封锁"></a>3.封锁</h2><p><strong>封锁粒度</strong>：封锁粒度越细，锁定数据越少，发生锁争用的可能越小，系统的并发程度就越高，但是也会消耗更多的资源，所以在选择封锁粒度时需要有所权衡。</p>
+<p><strong>封锁类型</strong>：读写锁和意向锁。</p>
+<p><strong>封锁协议</strong>：包括一、二、三级封锁协议和两段锁协议。</p>
+<h2 id="4-关系数据库设计理论"><a href="#4-关系数据库设计理论" class="headerlink" title="4.关系数据库设计理论"></a>4.关系数据库设计理论</h2><h3 id="4-1-函数依赖"><a href="#4-1-函数依赖" class="headerlink" title="4.1 函数依赖"></a>4.1 函数依赖</h3><p>记A - &gt;B表示A决定B，也可以说B依赖于A。</p>
+<p><strong>键码</strong>：若（A1,A2,…An）是关系的一个或多个属性集合，该集合函数决定了关系的其他属性并且是最小的，那么该集合就是键码。</p>
+<p><strong>部份依赖</strong>：若A-&gt;B，但A的真子集A’-&gt;B成立，则A-&gt;B是部份依赖。</p>
+<p><strong>完全依赖</strong>：若A-&gt;B，且无A的真子集A’-&gt;B成立，则A-&gt;B是完全依赖。</p>
+<p><strong>依赖传递</strong>：A-&gt;B,B-&gt;C，则A-&gt;C。</p>
+<h3 id="4-2-范式"><a href="#4-2-范式" class="headerlink" title="4.2 范式"></a>4.2 范式</h3><p>高级别范式的依赖于低级别的范式，1NF（第一范式） 是最低级别的范式。</p>
+<p><strong>INF</strong>：属性不可分。</p>
+<p><strong>2NF</strong>：每个非主属性完全依赖于键码。</p>
+<p><strong>3NF</strong>：非主属性之间必须互相独立，不存在依赖关系。</p>
+<h3 id="4-3-异常"><a href="#4-3-异常" class="headerlink" title="4.3 异常"></a>4.3 异常</h3><p>不符合范式的关系，会出现很多异常，主要有以下四种：</p>
+<p><strong>冗余数据</strong>：比如一个记录多次出现在表内。</p>
+<p><strong>修改异常</strong>：修改了一个记录中的信息，但另一个记录中相同的信息却没有被修改。</p>
+<p><strong>删除异常</strong>：删除一个信息，那么也会丢失其他信息。</p>
+<p><strong>插入异常</strong>：因为关联问题出现无法插入记录错误。</p>
+<h2 id="5-ER图"><a href="#5-ER图" class="headerlink" title="5.ER图"></a>5.ER图</h2><p>实体关系图（Entity-Relationship），有三个组成部分：<u>实体、属性、联系</u>。</p>
+<p>实体之间存在三种关系，分别是<u>一对一、一对多和多对多关系</u>。</p>
+]]></content>
+      <categories>
+        <category>计算机基础复习</category>
+      </categories>
+      <tags>
+        <tag>学习</tag>
+        <tag>前端面试，数据库系统原理</tag>
       </tags>
   </entry>
   <entry>
@@ -402,213 +592,6 @@
       <tags>
         <tag>学习</tag>
         <tag>前端面试，操作系统原理</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库系统原理基础知识点</title>
-    <url>/2021/12/21/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E5%A4%8D%E4%B9%A0/</url>
-    <content><![CDATA[<hr>
-<p><em>本文来源于<a href="https://github.com/CyC2018/CS-Notes%EF%BC%8C%E6%98%AF%E5%9C%A8%E9%98%85%E8%AF%BB%E8%AF%A5%E8%B5%84%E6%BA%90%E6%97%B6%E7%9A%84%E7%AC%94%E8%AE%B0%E6%95%B4%E7%90%86%EF%BC%8C%E4%BD%86%E6%9C%89%E5%A4%A7%E9%83%A8%E5%88%86%E7%9A%84%E5%86%85%E5%AE%B9%E5%92%8C%E5%8E%9F%E6%96%87%E4%B8%80%E8%87%B4%E3%80%82%E5%B9%B6%E4%B8%94%E5%9B%A0%E4%B8%BA%E6%9C%AC%E6%AC%A1%E5%A4%8D%E4%B9%A0%E6%98%AF%E4%BA%89%E5%AF%B9%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95%E7%9A%84%E5%87%86%E5%A4%87%EF%BC%8C%E6%89%80%E4%BB%A5%E4%B9%9F%E4%BC%9A%E9%80%89%E6%8B%A9%E6%80%A7%E5%A4%8D%E4%B9%A0%EF%BC%8C%E5%AF%B9%E4%BA%8E%E6%B7%B1%E5%88%BB%E7%9A%84%EF%BC%8C%E8%AE%A1%E7%AE%97%E7%B1%BB%E7%9F%A5%E8%AF%86%E7%82%B9%E5%8F%AA%E4%BC%9A%E7%B2%97%E7%95%A5%E6%89%AB%E8%BF%87">https://github.com/CyC2018/CS-Notes，是在阅读该资源时的笔记整理，但有大部分的内容和原文一致。并且因为本次复习是争对前端面试的准备，所以也会选择性复习，对于深刻的，计算类知识点只会粗略扫过</a></em>。</p>
-<hr>
-<h2 id="1-事务"><a href="#1-事务" class="headerlink" title="1.事务"></a>1.事务</h2><p>事务是指满足<u>ACID特性</u>的一组操作。ACID特性分别包括以下四个特性：</p>
-<p><strong>原子性</strong>（Atomicity）：事务被视为不可分割最小单元。事务的操作要么全部提交成功，要么全部失败滚回。</p>
-<p><strong>一致性</strong>（Consistency）：数据库在事务执行的前后都保持一致性状态。在一致性状态下，所有事务对同一数据的读取结构是相同的。</p>
-<p><strong>隔离性</strong>（Islation）一个事务所做的修改在最终提交以前，对其他食物不可见。</p>
-<p><strong>持久性</strong>（Durability）一旦事务提交，则其所做的修改将会永远保存在数据库中。即使系统崩溃，事务执行结构也不会丢失。</p>
-<h2 id="2-并发一致性问题"><a href="#2-并发一致性问题" class="headerlink" title="2.并发一致性问题"></a>2.并发一致性问题</h2><p>在并发环境下，事务隔离性很难保证，因此会出现以下并发一致性问题。</p>
-<p><strong>丢失修改</strong>：一个事务的更新操作被另一个事务的更新操作替换，如下图所示：</p>
-<p><img src="/images/react/2021122103.png"></p>
-<p><strong>读脏数据</strong>：当前事务可以读到另外事务未提交的数据，如下图所示：</p>
-<p><img src="/images/react/2021122104.png"></p>
-<p><strong>不可重复读</strong>：在一个事务内多次读取同一数据，期间该数据被另一事务进行了修改，会导致重复读统一数据的结果不一致，如下图所示：</p>
-<p><img src="/images/react/2021122105.png"></p>
-<h2 id="3-封锁"><a href="#3-封锁" class="headerlink" title="3.封锁"></a>3.封锁</h2><p><strong>封锁粒度</strong>：封锁粒度越细，锁定数据越少，发生锁争用的可能越小，系统的并发程度就越高，但是也会消耗更多的资源，所以在选择封锁粒度时需要有所权衡。</p>
-<p><strong>封锁类型</strong>：读写锁和意向锁。</p>
-<p><strong>封锁协议</strong>：包括一、二、三级封锁协议和两段锁协议。</p>
-<h2 id="4-关系数据库设计理论"><a href="#4-关系数据库设计理论" class="headerlink" title="4.关系数据库设计理论"></a>4.关系数据库设计理论</h2><h3 id="4-1-函数依赖"><a href="#4-1-函数依赖" class="headerlink" title="4.1 函数依赖"></a>4.1 函数依赖</h3><p>记A - &gt;B表示A决定B，也可以说B依赖于A。</p>
-<p><strong>键码</strong>：若（A1,A2,…An）是关系的一个或多个属性集合，该集合函数决定了关系的其他属性并且是最小的，那么该集合就是键码。</p>
-<p><strong>部份依赖</strong>：若A-&gt;B，但A的真子集A’-&gt;B成立，则A-&gt;B是部份依赖。</p>
-<p><strong>完全依赖</strong>：若A-&gt;B，且无A的真子集A’-&gt;B成立，则A-&gt;B是完全依赖。</p>
-<p><strong>依赖传递</strong>：A-&gt;B,B-&gt;C，则A-&gt;C。</p>
-<h3 id="4-2-范式"><a href="#4-2-范式" class="headerlink" title="4.2 范式"></a>4.2 范式</h3><p>高级别范式的依赖于低级别的范式，1NF（第一范式） 是最低级别的范式。</p>
-<p><strong>INF</strong>：属性不可分。</p>
-<p><strong>2NF</strong>：每个非主属性完全依赖于键码。</p>
-<p><strong>3NF</strong>：非主属性之间必须互相独立，不存在依赖关系。</p>
-<h3 id="4-3-异常"><a href="#4-3-异常" class="headerlink" title="4.3 异常"></a>4.3 异常</h3><p>不符合范式的关系，会出现很多异常，主要有以下四种：</p>
-<p><strong>冗余数据</strong>：比如一个记录多次出现在表内。</p>
-<p><strong>修改异常</strong>：修改了一个记录中的信息，但另一个记录中相同的信息却没有被修改。</p>
-<p><strong>删除异常</strong>：删除一个信息，那么也会丢失其他信息。</p>
-<p><strong>插入异常</strong>：因为关联问题出现无法插入记录错误。</p>
-<h2 id="5-ER图"><a href="#5-ER图" class="headerlink" title="5.ER图"></a>5.ER图</h2><p>实体关系图（Entity-Relationship），有三个组成部分：<u>实体、属性、联系</u>。</p>
-<p>实体之间存在三种关系，分别是<u>一对一、一对多和多对多关系</u>。</p>
-]]></content>
-      <categories>
-        <category>计算机基础复习</category>
-      </categories>
-      <tags>
-        <tag>学习</tag>
-        <tag>前端面试，数据库系统原理</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>正则表达式</title>
-    <url>/2021/12/21/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/</url>
-    <content><![CDATA[<hr>
-<p><em>本文来源于<a href="https://github.com/CyC2018/CS-Notes%EF%BC%8C%E6%98%AF%E5%9C%A8%E9%98%85%E8%AF%BB%E8%AF%A5%E8%B5%84%E6%BA%90%E6%97%B6%E7%9A%84%E7%AC%94%E8%AE%B0%E6%95%B4%E7%90%86%EF%BC%8C%E4%BD%86%E6%9C%89%E5%A4%A7%E9%83%A8%E5%88%86%E7%9A%84%E5%86%85%E5%AE%B9%E5%92%8C%E5%8E%9F%E6%96%87%E4%B8%80%E8%87%B4%E3%80%82%E5%B9%B6%E4%B8%94%E5%9B%A0%E4%B8%BA%E6%9C%AC%E6%AC%A1%E5%A4%8D%E4%B9%A0%E6%98%AF%E4%BA%89%E5%AF%B9%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95%E7%9A%84%E5%87%86%E5%A4%87%EF%BC%8C%E6%89%80%E4%BB%A5%E4%B9%9F%E4%BC%9A%E9%80%89%E6%8B%A9%E6%80%A7%E5%A4%8D%E4%B9%A0%EF%BC%8C%E5%AF%B9%E4%BA%8E%E6%B7%B1%E5%88%BB%E7%9A%84%EF%BC%8C%E8%AE%A1%E7%AE%97%E7%B1%BB%E7%9F%A5%E8%AF%86%E7%82%B9%E5%8F%AA%E4%BC%9A%E7%B2%97%E7%95%A5%E6%89%AB%E8%BF%87">https://github.com/CyC2018/CS-Notes，是在阅读该资源时的笔记整理，但有大部分的内容和原文一致。并且因为本次复习是争对前端面试的准备，所以也会选择性复习，对于深刻的，计算类知识点只会粗略扫过</a></em>。</p>
-<hr>
-<h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h2><p>正则表达式用于文本内容的查找和替换，本身不是一种语言或软件。</p>
-<h2 id="2-匹配单个字符"><a href="#2-匹配单个字符" class="headerlink" title="2.匹配单个字符"></a>2.匹配单个字符</h2><p><code>.</code>用来匹配单个任意字符，是元字符。如果想要匹配字符<code>.</code>，则要在前面加<code>\</code>，即<code>\.</code>，在<code>[]</code>里的<code>.</code>不是元字符。</p>
-<h2 id="3-匹配一组字符"><a href="#3-匹配一组字符" class="headerlink" title="3.匹配一组字符"></a>3.匹配一组字符</h2><p><code>[]</code>定义一个 字符集合，<code>0-9</code>、<code>a-z</code>在<code>[]</code>中表示一个字符区间，用ASCII码确定。<code>^</code>在<code>[]</code>中是取非操作。 <code>abc[^0-9]</code>表示以’abc’开头，并且第四个字符不为数字的字符串。</p>
-<h2 id="4-使用元字符"><a href="#4-使用元字符" class="headerlink" title="4.使用元字符"></a>4.使用元字符</h2><p><code>[\b]</code>是删除一个字符的意思；<code>\f</code>匹配换页符，<code>\n</code>匹配换行符，<code>\r</code>匹配回车符，<code>\t</code>匹配制表符，<code>\v</code>匹配垂直制表符。</p>
-<p><code>\d</code>等价于<code>[0-9]</code>，<code>\D</code>等价于<code>[^0-9]</code>，<code>\w</code>等价于<code>[a-zA-Z0-9_]</code>大小写字母、下划线和数字。<code>\W</code>等价于<code>[^a-zA-Z0-9_]</code>。<code>\s</code>表示任何一个空白字符，等价于<code>[\f\n\r\t\v]</code>，<code>\S</code>表示对<code>\s</code>取非，等价于<code>[^\f\n\r\t\v]</code>。</p>
-<p><code>\x</code>匹配十六进制字符,<code>\0</code>匹配八进制字符，比如<code>\xA</code>对应值为10的ASCII字符，即<code>\n</code>。</p>
-<h2 id="5-重复匹配"><a href="#5-重复匹配" class="headerlink" title="5.重复匹配"></a>5.重复匹配</h2><p><code>+</code>匹配1个或多个字符，<code>*</code>匹配0个或多个字符，<code>?</code>匹配0个或1个字符。</p>
-<p><code>&#123;n&#125;</code>匹配n个字符，<code>&#123;m,n&#125;</code>匹配m~n个字符，<code>&#123;m,&#125;</code>匹配至少m个字符。</p>
-<p><code>[\w]+</code>表示匹配字母数字或下划线很多次，a+c表示1个或多个连续的a加上一个c。</p>
-<p><img src="/images/react/2021122114.png"></p>
-<p><img src="/images/react/2021122115.png"></p>
-<p><code>*</code>和<code>+</code>都是贪婪的，会匹配尽可能多的内容。在后面加?可以转换为懒惰型元字符。</p>
-<p><code>a.+c</code>的匹配结果可以是<code>abcabcabc</code>，即明明前三个字符已经满足匹配结果，但因为<code>+</code>是贪婪的所以会匹配尽可能多的字符。</p>
-<h2 id="6-位置匹配"><a href="#6-位置匹配" class="headerlink" title="6.位置匹配"></a>6.位置匹配</h2><p><code>\b</code>可以匹配一个单词的边界，边界是指位于<code>\w</code>和<code>\W</code>之间的位置，<code>\B</code>匹配一个不是单词边界的位置。这两种匹配的都是位置，而不是字符串，比如<code>\babc\b</code>匹配的结果是3个字符串。</p>
-<p><code>^</code>在字符集合外用作匹配整个字符串的开头，<code>$</code>匹配整个字符串的结尾。</p>
-<p><code>^\s*\/\/.*$</code>的意思是匹配一个开头是0到多个空白字符加上<code>//</code>结尾是1个到多个任意字符的一行字符串，如下图所示：</p>
-<p><img src="/images/react/2021122118.png"></p>
-<h2 id="7-子表达式"><a href="#7-子表达式" class="headerlink" title="7.子表达式"></a>7.子表达式</h2><p><code>(ab)&#123;2,&#125;</code>表示至少两个<code>ab</code>组合元素的字符。可以匹配abab或更多有ab的字符串。</p>
-<p><img src="/images/react/2021122113.png"></p>
-<p><code>|</code>是或元字符，它把左边和右边所有的部分都看成单独的两个部分，两个部分只要有一个匹配就行。比如<code>(19|20)\d&#123;2&#125;</code>的意思是匹配’19‘或’20’开头并且后面有两个任意数字的字符串，如下图所示：</p>
-<p><img src="/images/react/2021122116.png"></p>
-<h2 id="8-回溯引用"><a href="#8-回溯引用" class="headerlink" title="8.回溯引用"></a>8.回溯引用</h2><p>回溯引用使用 <strong>\n</strong> 来引用某个子表达式，其中 n 代表的是子表达式的序号，从 1 开始。它和第n个子表达式匹配的内容一致，比如子表达式匹配到 abc，那么回溯引用部分也需要匹配 abc 。</p>
-<p><code>&lt;(h[1-6])&gt;(\w*?)&lt;\/\1\2&gt;</code>里使用了两个回溯引用，分别引用了第一个表达式和第二个表达式，如下图所示：</p>
-<p><img src="/images/react/2021122117.png"></p>
-<h2 id="9-替换"><a href="#9-替换" class="headerlink" title="9.替换"></a>9.替换</h2><p>正则表达式也可以应用在文本替换上，这需要两个正则表达式，第一个用来查找，第二个用来替换。例如修改电话号码<code>313-555-1234</code>的格式为<code>(313) 555-1234</code>，则需要1.查找电话，正则表达式为<code>(\d&#123;3&#125;)(-)(\d&#123;3&#125;)(-)(\d&#123;4&#125;)</code>，利用子表达式将电话号码的格式划分。2.替换，正则表达式为<code>($1) $3-$5</code>，表示为在第一个子表达式查找的结果加上 () ，然后加一个空格，在第三个和第五个字表达式查找的结果中间加上 - 进行分隔。</p>
-<p><code>\l</code>表示把下一个字符转为小写，<code>\u</code>表示把下一个字符转为大写，<code>\L</code>表示把<code>\L</code>和<code>\E</code>之间的字符全部转为小写，<code>\U</code>表示把<code>\U</code>和<code>\E</code>之间的字符全部转为大写，<code>\E</code>表示结束<code>\L</code>或<code>\U</code>。</p>
-<h2 id="10-前后查找"><a href="#10-前后查找" class="headerlink" title="10.前后查找"></a>10.前后查找</h2><p>前后查找规定了匹配的内容首尾应该匹配的内容，但是又不包含首尾匹配的内容。</p>
-<p>向前查找使用 <code>?=</code> 定义，它规定了尾部匹配的内容，这个匹配的内容在<code>?=</code>之后定义。所谓向前查找，就是规定了一个匹配的内容，然后以这个内容为尾部向前面查找需要匹配的内容。向后匹配用 <code>?&lt;= </code>定义（注: JavaScript 不支持向后匹配，Java 对其支持也不完善）。</p>
-<p>如<code>\w+(?=@)</code>表示查找@字符前面的部分，如图所示：</p>
-<p><img src="/images/react/2021122119.png"></p>
-<h2 id="11-嵌入条件"><a href="#11-嵌入条件" class="headerlink" title="11.嵌入条件"></a>11.嵌入条件</h2><p>条件为某个子表达式是否匹配，如果匹配则需要继续匹配条件表达式后面的内容。</p>
-<p>比如<code>(\()?abc(?(1)\))</code>的意思是，先看第一个表达式即第一个<code>()</code>里的内容为<code>\(</code>，表达式后面有一个<code>?</code>，目前为止的意思是匹配0或1个<code>(</code>，然后匹配字符串<code>abc</code>，然后遇到第二个子表达式，这个表达式为条件表达式，<code>?(1)</code>为条件，表示第一个表达式内容若成立，则需要执行<code>)</code>匹配，如下图所示：</p>
-<p><img src="/images/react/2021122120.png"></p>
-<p><code>?(?=-) </code>为前向查找条件，只有在以 - 为前向查找的结尾能匹配<code>\d&#123;5&#125;</code>，才继续匹配 <code>-\d&#123;4&#125;</code> ，如下图所示：</p>
-<p><img src="/images/react/2021122121.png"></p>
-]]></content>
-      <categories>
-        <category>计算机基础复习</category>
-      </categories>
-      <tags>
-        <tag>学习</tag>
-        <tag>前端面试，正则表达式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>浏览器中JavaScript执行机制</title>
-    <url>/2021/12/27/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%ADJavaScript%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/</url>
-    <content><![CDATA[<p>1.变量提升</p>
-<p>使用过JavaScipt的程序员都清除JavaScipt是按顺序执行的，不过看以下代码的输出结果，就会发现似乎并没有按’顺序’执行。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript">showName()<br><span class="hljs-built_in">console</span>.log(myname)<br><span class="hljs-keyword">var</span> myname = <span class="hljs-string">&#x27;极客时间&#x27;</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showName</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;函数showName被执行&#x27;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>执行结果如下图所示：</p>
-<p><img src="/images/react/2021122701.png"></p>
-<p>据图可知，在变量和函数进行声明之前就调用了它们，但是依旧能够执行。并且函数能够正常执行但是变量却是<code>underfined</code>。如果删掉变量声明，即上述代码的第三行，那么执行结果又会是什么呢？如下图所示，代码会报错。</p>
-<p><img src="/images/react/2021122702.png"></p>
-<p>可见如果在下文定义了变量和函数，那么在上文中使用该变量和函数时不会报错，不过函数可以顺利输出结果，但是变量却是‘underfined’，而如果在下文没有定义，则会报错。这种情况被称为变量提升。</p>
-<p>1.1 什么是变量提升</p>
-<p>首先先要了解声明和赋值的概念，对于下面这行代码：</p>
-<figure class="highlight ini"><table><tr><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">varname</span> = <span class="hljs-string">&#x27;name&#x27;</span><br></code></pre></td></tr></table></figure>
-
-<p>其实可以分为两个阶段，即变量的声明阶段和变量赋值阶段：</p>
-<figure class="highlight delphi"><table><tr><td class="code"><pre><code class="hljs delphi"><span class="hljs-keyword">var</span> <span class="hljs-keyword">name</span> = underfined<br><span class="hljs-keyword">name</span> = <span class="hljs-string">&#x27;name&#x27;</span><br></code></pre></td></tr></table></figure>
-
-<p>而争对函数可以看下段代码</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>)</span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;foo&#x27;</span>)<br>&#125;<span class="hljs-comment">//这个函数定义本身就是函数声明</span><br><br><span class="hljs-keyword">var</span> bar=<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;bar&#x27;</span>)<br>&#125;<br><span class="hljs-comment">//变量声明 var bar = underfined</span><br><span class="hljs-comment">//变量赋值 var = function()&#123; ... &#125;</span><br></code></pre></td></tr></table></figure>
-
-<p>可见对于函数来说，函数声明就是函数定义本身。</p>
-<p>变量提升就是在JavaScipt代码执行过程中，把变量和函数的声明部分提到代码开头的行为，对于变量声明会设置默认值即underfined。</p>
-<p>如下图所示，就是我们的第一段代码进行变量提升后造成的效果。</p>
-<figure class="highlight stylus"><table><tr><td class="code"><pre><code class="hljs stylus"><span class="hljs-comment">//先进行变量提升，即提取变量和函数的声明</span><br><span class="hljs-selector-tag">var</span> myname = underfined<br>function showName()&#123;<br>    console<span class="hljs-selector-class">.log</span>(<span class="hljs-string">&#x27;showName被调用&#x27;</span>)<br>&#125;<br><br><span class="hljs-comment">//再是代码的可执行部分</span><br><span class="hljs-function"><span class="hljs-title">showName</span><span class="hljs-params">()</span></span><br>console<span class="hljs-selector-class">.log</span>(myname)<br>myname=<span class="hljs-string">&#x27;极客时间&#x27;</span><span class="hljs-comment">//去掉原来的var变量声明，变成变量赋值操作</span><br></code></pre></td></tr></table></figure>
-
-<p>上面就是变量提升带来的效果，其实一共就是两个步骤：1.提取变量和函数的声明放在代码顶部，对于变量声明进行<code>underfined</code>赋值。2.再执行代码可执行部分，对于原先的声明进行去除操作。</p>
-<p>1.2 Java代码的执行流程</p>
-<p>在了解什么是变量声明后，我们会以为变量声明的过程中是将代码的顺序进行改变的过程，但其实并不是，实际上代码的位置并没有改变，变量和函数声明的位置也没有变。JavaScipt的执行流程如下图所示：</p>
-<p><img src="/images/react/2021122703.png"></p>
-<p>其中，变量提升的实现其实是在编译阶段实现的。输入一段代码，经过编译后会生成两部分内容：执行上下文和可执行代码。如下图所示：</p>
-<p><img src="/images/react/2021122704.png"></p>
-<p>据图可知，在执行上下文中会保存代码的环境变量，其中就包括变量声明。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript">showName()<br><span class="hljs-built_in">console</span>.log(myname)<br><span class="hljs-keyword">var</span> myname = <span class="hljs-string">&#x27;极客时间&#x27;</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showName</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;函数showName被执行&#x27;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>对于这段代码，编辑阶段的JavaScript引擎会对其进行分析处理，第1行第2行代码因为不是变量？函数声明则不进行处理，第3行是变量声明，于是JavaScipt引擎会在环境对象中创造一个myname的属性并初始化为<code>underfined</code>，第4行则是一个函数声明，JavaScript引擎会将函数定义存储岛堆中，并在环境对象中创建一个showName属性，将该属性指向堆中函数的位置。接下来JavaScipt会将声明以外的代码编译成字节码。这样就有了包含环境对象（变量声明）的执行上下文和可执行代码了。</p>
-<p>接下来就是进行执行阶段。在执行阶段，JavaScipt引擎是按照可执行代码的顺序一步一步执行的，争对上面这段代码的可执行部分就是：</p>
-<figure class="highlight stylus"><table><tr><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">showName</span><span class="hljs-params">()</span></span><br>console<span class="hljs-selector-class">.log</span>(myname)<br>myname=<span class="hljs-string">&#x27;极客时间&#x27;</span><br></code></pre></td></tr></table></figure>
-
-<p>执行第1行时，JavaScript引擎会先在执行上下文的变量环境中寻找与此函数同名的属性，如果找到，就输出该属性的引用结果。</p>
-<p>执行第2行时，JavaScipt引擎同理在变量环境中查找<code>myname</code>属性，找到后就输出该属性值。</p>
-<p>执行第3行时，会将变量环境中的<code>myname</code>属性的值改为“极客时间”。</p>
-<p>以上就是变量提升在JavaScipt实际编译流程中的实现原理。</p>
-<p>3.代码中出现相同的变量/函数怎么办</p>
-<p>如下列代码所示：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showName</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;极客邦&#x27;</span>);<br>&#125;<br>showName();<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showName</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;极客时间&#x27;</span>);<br>&#125;<br>showName(); <br></code></pre></td></tr></table></figure>
-
-<p>实际上在编译阶段获取变量环境时就会将已有的showName属性在第一次定义后进行第二次修改，或者是覆盖第一次定义。所以实际运行时两个函数输出的结果是相同的，都是‘极客时间’。</p>
-<p>2.调用栈</p>
-<p>上面一节通过变量提升的概率了解了JavaScipt引擎的编译过程，接下来具体深入该过程，这一节了解的是调用栈这一概念。</p>
-<p>2.1 什么是函数调用</p>
-<p>函数调用就是运行一个函数，如下列代码所示：</p>
-<figure class="highlight stylus"><table><tr><td class="code"><pre><code class="hljs stylus"><span class="hljs-selector-tag">var</span> <span class="hljs-selector-tag">a</span> = <span class="hljs-number">2</span><br>function add()&#123;<br><span class="hljs-selector-tag">var</span> <span class="hljs-selector-tag">b</span> = <span class="hljs-number">10</span><br>return  a+<span class="hljs-selector-tag">b</span><br>&#125;<br><span class="hljs-function"><span class="hljs-title">add</span><span class="hljs-params">()</span></span><br></code></pre></td></tr></table></figure>
-
-<p>其中<code>add()</code>就是一个函数调用。根据这段代码按照上一节所学的可以知道，再进行add函数调用前会创建执行上下文，其中包括了变量环境，但这就涉及到了全局变量和局部变量的问题，在函数内部定义的变量又是怎么进行执行上下文创建的呢。</p>
-<p>这就是一个顺序问题，首先获得这段JavaScript代码，JavaScript引擎会先创建一个全局执行上下文。在全局执行上下文中有变量环境如下所示：</p>
-<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><code class="hljs livecodeserver">VariableEnvironment：<br>    <span class="hljs-keyword">a</span> -&gt; underfined,<br>    <span class="hljs-built_in">add</span> -&gt; <span class="hljs-function"><span class="hljs-keyword">function</span>: &#123;</span><br>    var b=<span class="hljs-number">10</span><br>    <span class="hljs-literal">return</span> <span class="hljs-keyword">a</span>+b<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>搭建好全局的执行上写文后就进行全局的可执行代码执行，此时调用add函数，又要建立函数内的执行上下文，函数内的环境变量如下所示：</p>
-<figure class="highlight xl"><table><tr><td class="code"><pre><code class="hljs xl">VariableEnvironment：<br>    <span class="hljs-function"><span class="hljs-title">b</span> -&gt;</span> underfined<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>然后再执行函数内的可执行代码。具体的流程如下图所示：</p>
-<p><img src="/images/react/2021122705.png"></p>
-<p>这其中就需要建立两个执行上下文，但JavaScript是怎么不把它们弄混的呢？这就涉及到了栈的概念。栈就是一种先入后出的结构。</p>
-<p>2.2 什么是JavaScript的调用栈</p>
-<p>JavaScript引擎就是利用栈的结构来管理执行上下文的，在执行上下文创建好后会将其压入栈中，这样的栈就叫做调用栈。</p>
-<p>看下面这段代码：</p>
-<figure class="highlight ada"><table><tr><td class="code"><pre><code class="hljs ada">var a = <span class="hljs-number">2</span><br><span class="hljs-keyword">function</span> <span class="hljs-title">add</span>(b,c)&#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-type">b+c</span><br>&#125;<br><span class="hljs-keyword">function</span> <span class="hljs-title">addAll</span>(b,c)&#123;<br>var d = 10<br>result = add(b,c)<br><span class="hljs-keyword">return</span>  <span class="hljs-type">a+result+d</span><br>&#125;<br>addAll(<span class="hljs-number">3</span>,<span class="hljs-number">6</span>)<br></code></pre></td></tr></table></figure>
-
-<p>这段代码的执行过程为</p>
-<p>第一步，创建全局上下文，并将其压入栈底，如下图所示：</p>
-<p><img src="/images/react/2021122706.png"></p>
-<p>然后执行全局代码。</p>
-<p>当运行到调用addAll函数时进行第二步，创建该函数的执行上下文，并将其压入栈中，如下图所示：</p>
-<p><img src="/images/react/2021122707.png"></p>
-<p>之后就进入该函数代码的执行阶段。</p>
-<p>当执行到add函数的调用语句时就进行到第三步，为其创建执行上下文，并压入栈中，如下图所示：</p>
-<p><img src="/images/react/2021122708.png"></p>
-<p>当ad函数返回时，调用栈会将顶部的执行上下文弹出，然后继续执行，直到返回到只剩下全局执行上下文为止。调用栈是JavaScript引擎追踪函数执行的一个机制，当一次有多个函数被调用时，通过调用栈就能追踪到哪个函数正在被执行以及各函数之间的调用关系。</p>
-<p>2.3 在开发中使用调用栈</p>
-<p>利用浏览器查看调用栈：比如打开Chrome的开发者工具，在Sources中打开页面，在相关的JavaScript上设置断点，并且刷新运行，然后在右侧的call stack中就可以看到调用栈。如下图所示。</p>
-<p><img src="/images/react/2021122709.png"></p>
-<p>在call stack中最底层的(anonymous)就是全局执行上下文。</p>
-<p>使用<code>console.trace()</code>来输出当前函数的调用关系，如下段代码所示：</p>
-<figure class="highlight stylus"><table><tr><td class="code"><pre><code class="hljs stylus"><span class="hljs-selector-tag">var</span> <span class="hljs-selector-tag">a</span> = <span class="hljs-number">2</span><br>function add(<span class="hljs-selector-tag">b</span>,c)<br>&#123; console<span class="hljs-selector-class">.trace</span>()<span class="hljs-comment">//输出当前函数的调用关系</span><br>  return b+c<br>&#125;<br>function addAll(<span class="hljs-selector-tag">b</span>,c)&#123;<br><span class="hljs-selector-tag">var</span> d = <span class="hljs-number">10</span><br>result = add(<span class="hljs-selector-tag">b</span>,c)<br>return  a+result+d<br>&#125;<br><span class="hljs-function"><span class="hljs-title">addAll</span><span class="hljs-params">(<span class="hljs-number">3</span>,<span class="hljs-number">6</span>)</span></span><br></code></pre></td></tr></table></figure>
-
-<p>上面代码的输出结果如下图所示。</p>
-<p><img src="/images/react/2021122710.png"></p>
-<p>2.3 栈溢出</p>
-<p>需要知道的是调用栈是有大小的，所以当栈内的执行上下文数量超过一定值时，JavaScript引擎就会报错，这种情况就叫做栈溢出。</p>
-<p>如下段代码所示：</p>
-<figure class="highlight ada"><table><tr><td class="code"><pre><code class="hljs ada"><span class="hljs-keyword">function</span> <span class="hljs-title">division</span>(a,b)&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-type">division(a,b)</span><br>&#125;<br>console.log(division(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>))<br></code></pre></td></tr></table></figure>
-
-<p>执行后会出下如图所示报错：</p>
-<p><img src="/images/react/2021122711.png"></p>
-<p>解决栈溢出的问题是尽量避免回调函数的方法，可以使用循环语句来代替回调函数。</p>
-<p>如下端代码所示：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">runStack</span> (<span class="hljs-params">n</span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (n === <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">100</span>;<br>  <span class="hljs-keyword">return</span> runStack( n- <span class="hljs-number">2</span>);<br>&#125;<br>runStack(<span class="hljs-number">50000</span>)<br><span class="hljs-comment">//这段代码就会产生栈溢出的问题，可以进行以下优化</span><br><br><br><span class="hljs-comment">// 优化</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">runStack</span>(<span class="hljs-params">n</span>) </span>&#123;<br>    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>        <span class="hljs-keyword">if</span> (n === <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">100</span>;<br>        &#125;<br><br>        <span class="hljs-keyword">if</span> (n === <span class="hljs-number">1</span>) &#123; <span class="hljs-comment">// 防止陷入死循环</span><br>            <span class="hljs-keyword">return</span> <span class="hljs-number">200</span>;<br>        &#125;<br><br>        n = n - <span class="hljs-number">2</span>;<br>    &#125;<br>&#125;<br><br><span class="hljs-built_in">console</span>.log(runStack(<span class="hljs-number">50000</span>));<br></code></pre></td></tr></table></figure>
-
-<p>上面这段代码的优化就是使用了while循环来代替了递归函数。</p>
-]]></content>
-      <categories>
-        <category>浏览器</category>
-      </categories>
-      <tags>
-        <tag>浏览器</tag>
-        <tag>JavaScript</tag>
-        <tag>前端面试</tag>
       </tags>
   </entry>
   <entry>
@@ -731,6 +714,208 @@
       <tags>
         <tag>学习</tag>
         <tag>前端面试，面向对象思想</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>浏览器中JavaScript执行机制</title>
+    <url>/2021/12/27/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%ADJavaScript%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/</url>
+    <content><![CDATA[<hr>
+<p><em>本文来源于<a href="http://interview.poetries.top%EF%BC%8C%E7%84%B6%E5%90%8E%E5%9C%A8%E9%98%85%E8%AF%BB%E8%BF%87%E7%A8%8B%E4%B8%AD%E5%8F%91%E7%8E%B0%E8%BF%99%E6%98%AF%E5%87%BA%E4%BA%8E%E6%9E%81%E5%85%89%E8%AF%BE%E7%A8%8B%5B%E3%80%8A%E6%B5%8F%E8%A7%88%E5%99%A8%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E8%B7%B5%E3%80%8B_-%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4%5D(https://time.geekbang.org/column/intro/216)%E3%80%82%E6%9C%AC%E6%96%87%E7%AB%A0%E6%98%AF%E5%9C%A8%E9%98%85%E8%AF%BB%E8%AF%A5%E8%B5%84%E6%96%99%E6%97%B6%E7%9A%84%E7%AC%94%E8%AE%B0%E6%95%B4%E7%90%86%EF%BC%8C%E6%9C%89%E9%83%A8%E5%88%86%E7%9B%B4%E6%8E%A5%E6%90%AC%E8%BF%90%E5%8E%9F%E6%96%87%EF%BC%8C%E4%BE%B5%E5%88%A0%E3%80%82">http://interview.poetries.top，然后在阅读过程中发现这是出于极光课程<a href="https://time.geekbang.org/column/intro/216">《浏览器工作原理与实践》_-极客时间</a>。本文章是在阅读该资料时的笔记整理，有部分直接搬运原文，侵删。</a></em></p>
+<hr>
+<h2 id="1-变量提升"><a href="#1-变量提升" class="headerlink" title="1.变量提升"></a>1.变量提升</h2><p>使用过JavaScipt的程序员都清除JavaScipt是按顺序执行的，不过看以下代码的输出结果，就会发现似乎并没有按’顺序’执行。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript">showName()<br><span class="hljs-built_in">console</span>.log(myname)<br><span class="hljs-keyword">var</span> myname = <span class="hljs-string">&#x27;极客时间&#x27;</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showName</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;函数showName被执行&#x27;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>执行结果如下图所示：</p>
+<p><img src="/images/react/2021122701.png"></p>
+<p>据图可知，在变量和函数进行声明之前就调用了它们，但是依旧能够执行。并且函数能够正常执行但是变量却是<code>underfined</code>。如果删掉变量声明，即上述代码的第三行，那么执行结果又会是什么呢？如下图所示，代码会报错。</p>
+<p><img src="/images/react/2021122702.png"></p>
+<p>可见如果在下文定义了变量和函数，那么在上文中使用该变量和函数时不会报错，不过函数可以顺利输出结果，但是变量却是<code>underfined</code>，而如果在下文没有定义，则会报错。这种情况被称为<u>变量提升</u>。</p>
+<h3 id="1-1-什么是变量提升"><a href="#1-1-什么是变量提升" class="headerlink" title="1.1 什么是变量提升"></a>1.1 什么是变量提升</h3><p>首先先要了解<u>声明和赋值</u>的概念，对于下面这行代码：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">varname</span> = <span class="hljs-string">&#x27;name&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>其实可以分为两个阶段，即变量的声明阶段和变量赋值阶段：</p>
+<figure class="highlight delphi"><table><tr><td class="code"><pre><code class="hljs delphi"><span class="hljs-keyword">var</span> <span class="hljs-keyword">name</span> = underfined<br><span class="hljs-keyword">name</span> = <span class="hljs-string">&#x27;name&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>而争对函数可以看下段代码</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>)</span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;foo&#x27;</span>)<br>&#125;<span class="hljs-comment">//这个函数定义本身就是函数声明</span><br><br><span class="hljs-keyword">var</span> bar=<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;bar&#x27;</span>)<br>&#125;<br><span class="hljs-comment">//变量声明 var bar = underfined</span><br><span class="hljs-comment">//变量赋值 var = function()&#123; ... &#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>可见对于函数来说，<u>函数声明</u>就是函数定义本身。</p>
+<p>变量提升就是在JavaScipt代码执行过程中，把变量和函数的声明部分提到代码开头的行为，对于变量声明会设置默认值即<code>underfined</code>。</p>
+<p>如下图所示，就是我们的第一段代码进行变量提升后造成的效果。</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><code class="hljs stylus"><span class="hljs-comment">//先进行变量提升，即提取变量和函数的声明</span><br><span class="hljs-selector-tag">var</span> myname = underfined<br>function showName()&#123;<br>    console<span class="hljs-selector-class">.log</span>(<span class="hljs-string">&#x27;showName被调用&#x27;</span>)<br>&#125;<br><br><span class="hljs-comment">//再是代码的可执行部分</span><br><span class="hljs-function"><span class="hljs-title">showName</span><span class="hljs-params">()</span></span><br>console<span class="hljs-selector-class">.log</span>(myname)<br>myname=<span class="hljs-string">&#x27;极客时间&#x27;</span><span class="hljs-comment">//去掉原来的var变量声明，变成变量赋值操作</span><br></code></pre></td></tr></table></figure>
+
+<p>上面就是变量提升带来的效果，其实一共就是两个步骤：1.提取变量和函数的声明放在代码顶部，对于变量声明进行<code>underfined</code>赋值。2.再执行代码可执行部分，对于原先的声明进行去除操作。</p>
+<h3 id="1-2-Java代码的执行流程"><a href="#1-2-Java代码的执行流程" class="headerlink" title="1.2 Java代码的执行流程"></a>1.2 Java代码的执行流程</h3><p>在了解什么是变量声明后，我们会以为变量声明的过程中是将代码的顺序进行改变的过程，但其实并不是，<u>实际上代码的位置并没有改变</u>，变量和函数声明的位置也没有变。JavaScipt的执行流程如下图所示：</p>
+<p><img src="/images/react/2021122703.png"></p>
+<p>其中，变量提升的实现其实是在<u>编译阶段</u>实现的。输入一段代码，经过编译后会生成两部分内容：执行上下文和可执行代码。如下图所示：</p>
+<p><img src="/images/react/2021122704.png"></p>
+<p>据图可知，在执行上下文中会保存代码的<u>环境变量</u>，其中就包括变量声明。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript">showName()<br><span class="hljs-built_in">console</span>.log(myname)<br><span class="hljs-keyword">var</span> myname = <span class="hljs-string">&#x27;极客时间&#x27;</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showName</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;函数showName被执行&#x27;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>对于这段代码，编辑阶段的JavaScript引擎会对其进行分析处理，第1行第2行代码因为不是变量？函数声明则不进行处理，第3行是变量声明，于是JavaScipt引擎会在环境对象中创造一个myname的属性并初始化为<code>underfined</code>，第4行则是一个函数声明，JavaScript引擎会将函数定义存储岛堆中，并在环境对象中创建一个showName属性，将该属性指向堆中函数的位置。接下来JavaScipt会将声明以外的代码编译成字节码。这样就有了包含环境对象（变量声明）的执行上下文和可执行代码了。</p>
+<p>接下来就是进行执行阶段。在执行阶段，JavaScipt引擎是按照可执行代码的顺序一步一步执行的，争对上面这段代码的可执行部分就是：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">showName</span><span class="hljs-params">()</span></span><br>console<span class="hljs-selector-class">.log</span>(myname)<br>myname=<span class="hljs-string">&#x27;极客时间&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>执行第1行时，JavaScript引擎会先在执行上下文的变量环境中寻找与此函数同名的属性，如果找到，就输出该属性的引用结果。</p>
+<p>执行第2行时，JavaScipt引擎同理在变量环境中查找<code>myname</code>属性，找到后就输出该属性值。</p>
+<p>执行第3行时，会将变量环境中的<code>myname</code>属性的值改为“极客时间”。</p>
+<p>以上就是变量提升在JavaScipt实际编译流程中的实现原理。</p>
+<p>3.代码中出现相同的变量/函数怎么办</p>
+<p>如下列代码所示：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showName</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;极客邦&#x27;</span>);<br>&#125;<br>showName();<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showName</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;极客时间&#x27;</span>);<br>&#125;<br>showName(); <br></code></pre></td></tr></table></figure>
+
+<p>实际上在编译阶段获取变量环境时就会将已有的showName属性在第一次定义后进行第二次修改，或者是覆盖第一次定义。所以实际运行时两个函数输出的结果是相同的，都是‘极客时间’。</p>
+<h2 id="2-调用栈"><a href="#2-调用栈" class="headerlink" title="2.调用栈"></a>2.调用栈</h2><p>上面一节通过变量提升的概率了解了JavaScipt引擎的编译过程，接下来具体深入该过程，这一节了解的是调用栈这一概念。</p>
+<h3 id="2-1-什么是函数调用"><a href="#2-1-什么是函数调用" class="headerlink" title="2.1 什么是函数调用"></a>2.1 什么是函数调用</h3><p>函数调用就是运行一个函数，如下列代码所示：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><code class="hljs stylus"><span class="hljs-selector-tag">var</span> <span class="hljs-selector-tag">a</span> = <span class="hljs-number">2</span><br>function add()&#123;<br><span class="hljs-selector-tag">var</span> <span class="hljs-selector-tag">b</span> = <span class="hljs-number">10</span><br>return  a+<span class="hljs-selector-tag">b</span><br>&#125;<br><span class="hljs-function"><span class="hljs-title">add</span><span class="hljs-params">()</span></span><br></code></pre></td></tr></table></figure>
+
+<p>其中<code>add()</code>就是一个函数调用。根据这段代码按照上一节所学的可以知道，再进行add函数调用前会创建<u>执行上下文</u>，其中包括了变量环境，但这就涉及到了全局变量和局部变量的问题，在函数内部定义的变量又是怎么进行执行上下文创建的呢。</p>
+<p>这就是一个顺序问题，首先获得这段JavaScript代码，JavaScript引擎会先创建一个<u>全局执行上下文</u>。在全局执行上下文中有变量环境如下所示：</p>
+<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><code class="hljs livecodeserver">VariableEnvironment：<br>    <span class="hljs-keyword">a</span> -&gt; underfined,<br>    <span class="hljs-built_in">add</span> -&gt; <span class="hljs-function"><span class="hljs-keyword">function</span>: &#123;</span><br>    var b=<span class="hljs-number">10</span><br>    <span class="hljs-literal">return</span> <span class="hljs-keyword">a</span>+b<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>搭建好全局的执行上写文后就进行全局的可执行代码执行，此时调用add函数，又要建立<u>函数内的执行上下文</u>，函数内的环境变量如下所示：</p>
+<figure class="highlight xl"><table><tr><td class="code"><pre><code class="hljs xl">VariableEnvironment：<br>    <span class="hljs-function"><span class="hljs-title">b</span> -&gt;</span> underfined<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>然后再执行函数内的可执行代码。具体的流程如下图所示：</p>
+<p><img src="/images/react/2021122705.png"></p>
+<p>这其中就需要建立两个执行上下文，但JavaScript是怎么不把它们弄混的呢？这就涉及到了<u>栈</u>的概念。栈就是一种<u>先入后出</u>的结构。</p>
+<h3 id="2-2-什么是JavaScript的调用栈"><a href="#2-2-什么是JavaScript的调用栈" class="headerlink" title="2.2 什么是JavaScript的调用栈"></a>2.2 什么是JavaScript的调用栈</h3><p>JavaScript引擎就是利用栈的结构来管理执行上下文的，在执行上下文创建好后会将其压入栈中，这样的栈就叫做调用栈。</p>
+<p>看下面这段代码：</p>
+<figure class="highlight ada"><table><tr><td class="code"><pre><code class="hljs ada">var a = <span class="hljs-number">2</span><br><span class="hljs-keyword">function</span> <span class="hljs-title">add</span>(b,c)&#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-type">b+c</span><br>&#125;<br><span class="hljs-keyword">function</span> <span class="hljs-title">addAll</span>(b,c)&#123;<br>var d = 10<br>result = add(b,c)<br><span class="hljs-keyword">return</span>  <span class="hljs-type">a+result+d</span><br>&#125;<br>addAll(<span class="hljs-number">3</span>,<span class="hljs-number">6</span>)<br></code></pre></td></tr></table></figure>
+
+<p>这段代码的执行过程为第一步，创建全局上下文，并将其压入栈底，如下图所示：</p>
+<p><img src="/images/react/2021122706.png"></p>
+<p>然后执行全局代码。</p>
+<p>当运行到调用addAll函数时进行第二步，创建该函数的执行上下文，并将其压入栈中，如下图所示：</p>
+<p><img src="/images/react/2021122707.png"></p>
+<p>之后就进入该函数代码的执行阶段。</p>
+<p>当执行到add函数的调用语句时就进行到第三步，为其创建执行上下文，并压入栈中，如下图所示：</p>
+<p><img src="/images/react/2021122708.png"></p>
+<p>当ad函数返回时，调用栈会将顶部的执行上下文弹出，然后继续执行，直到返回到只剩下全局执行上下文为止。调用栈是JavaScript引擎追踪函数执行的一个机制，当一次有多个函数被调用时，通过调用栈就能追踪到哪个函数正在被执行以及各函数之间的调用关系。</p>
+<h3 id="2-3-在开发中使用调用栈"><a href="#2-3-在开发中使用调用栈" class="headerlink" title="2.3 在开发中使用调用栈"></a>2.3 在开发中使用调用栈</h3><p>利用浏览器查看调用栈：比如打开Chrome的开发者工具，在Sources中打开页面，在相关的JavaScript上设置断点，并且刷新运行，然后在右侧的call stack中就可以看到调用栈。如下图所示。</p>
+<p><img src="/images/react/2021122709.png"></p>
+<p>在call stack中最底层的(anonymous)就是全局执行上下文。</p>
+<p>使用<code>console.trace()</code>来输出当前函数的调用关系，如下段代码所示：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><code class="hljs stylus"><span class="hljs-selector-tag">var</span> <span class="hljs-selector-tag">a</span> = <span class="hljs-number">2</span><br>function add(<span class="hljs-selector-tag">b</span>,c)<br>&#123; console<span class="hljs-selector-class">.trace</span>()<span class="hljs-comment">//输出当前函数的调用关系</span><br>  return b+c<br>&#125;<br>function addAll(<span class="hljs-selector-tag">b</span>,c)&#123;<br><span class="hljs-selector-tag">var</span> d = <span class="hljs-number">10</span><br>result = add(<span class="hljs-selector-tag">b</span>,c)<br>return  a+result+d<br>&#125;<br><span class="hljs-function"><span class="hljs-title">addAll</span><span class="hljs-params">(<span class="hljs-number">3</span>,<span class="hljs-number">6</span>)</span></span><br></code></pre></td></tr></table></figure>
+
+<p>上面代码的输出结果如下图所示。</p>
+<p><img src="/images/react/2021122710.png"></p>
+<h3 id="2-4-栈溢出"><a href="#2-4-栈溢出" class="headerlink" title="2.4 栈溢出"></a>2.4 栈溢出</h3><p>需要知道的是调用栈是有大小的，所以当栈内的执行上下文数量超过一定值时，JavaScript引擎就会报错，这种情况就叫做<u>栈溢出</u>。</p>
+<p>如下段代码所示：</p>
+<figure class="highlight ada"><table><tr><td class="code"><pre><code class="hljs ada"><span class="hljs-keyword">function</span> <span class="hljs-title">division</span>(a,b)&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-type">division(a,b)</span><br>&#125;<br>console.log(division(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>))<br></code></pre></td></tr></table></figure>
+
+<p>执行后会出下如图所示报错：</p>
+<p><img src="/images/react/2021122711.png"></p>
+<p>解决栈溢出的问题是<u>尽量避免回调函数的方法</u>，可以使用循环语句来代替回调函数。</p>
+<p>如下端代码所示：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">runStack</span> (<span class="hljs-params">n</span>) </span>&#123;<br>  <span class="hljs-keyword">if</span> (n === <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">100</span>;<br>  <span class="hljs-keyword">return</span> runStack( n- <span class="hljs-number">2</span>);<br>&#125;<br>runStack(<span class="hljs-number">50000</span>)<br><span class="hljs-comment">//这段代码就会产生栈溢出的问题，可以进行以下优化</span><br><br><br><span class="hljs-comment">// 优化</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">runStack</span>(<span class="hljs-params">n</span>) </span>&#123;<br>    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>        <span class="hljs-keyword">if</span> (n === <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">100</span>;<br>        &#125;<br><br>        <span class="hljs-keyword">if</span> (n === <span class="hljs-number">1</span>) &#123; <span class="hljs-comment">// 防止陷入死循环</span><br>            <span class="hljs-keyword">return</span> <span class="hljs-number">200</span>;<br>        &#125;<br><br>        n = n - <span class="hljs-number">2</span>;<br>    &#125;<br>&#125;<br><br><span class="hljs-built_in">console</span>.log(runStack(<span class="hljs-number">50000</span>));<br></code></pre></td></tr></table></figure>
+
+<p>上面这段代码的优化就是使用了while循环来代替了递归函数。</p>
+<h2 id="3-块级作用域"><a href="#3-块级作用域" class="headerlink" title="3.块级作用域"></a>3.块级作用域</h2><p>在上面两节中提到了JavaScript的变量提升现象，这会造成很多误解问题，为了解决这种缺陷ES6引入了<u>let和cons</u>t来解决。let&amp;const使用块级作用域来解决了这个问题。</p>
+<h3 id="3-1-作用域"><a href="#3-1-作用域" class="headerlink" title="3.1 作用域"></a>3.1 作用域</h3><p>作用域就是变量能够访问的范围，JavaScript只有两种作用域：<u>全局作用域、函数作用域</u>。而其他许多语言则还有<u>块级作用域</u>，即用<code>&#123;&#125;</code>包围的区间就可以称为一个块级作用域，比如在Java中以下代码都是块级作用域：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><code class="hljs stylus"><span class="hljs-comment">//if块</span><br><span class="hljs-function"><span class="hljs-title">if</span><span class="hljs-params">(<span class="hljs-number">1</span>)</span></span>&#123;&#125;<br><br><span class="hljs-comment">//while块</span><br><span class="hljs-function"><span class="hljs-title">while</span><span class="hljs-params">(<span class="hljs-number">1</span>)</span></span>&#123;&#125;<br><br><span class="hljs-comment">//函数块</span><br>function foo()&#123;<br><br><span class="hljs-comment">//for循环块</span><br><span class="hljs-function"><span class="hljs-title">for</span><span class="hljs-params">(let i = <span class="hljs-number">0</span>; i&lt;<span class="hljs-number">100</span>; i++)</span></span>&#123;&#125;<br><br><span class="hljs-comment">//单独一个块</span><br>&#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-2-ES6中的let和const"><a href="#3-2-ES6中的let和const" class="headerlink" title="3.2 ES6中的let和const"></a>3.2 ES6中的let和const</h3><p>因为JavaScript的最初设计理念比较简单，所以它存在很多由于没有块级作用域带来的问题，为了解决这些问题，ES6引用了let和const关键字，让其也能像其他语言一样拥有块级作用域。</p>
+<p>let和const分别是定义变量和常量的关键字，如下列代码所示，使用这两个关键字就能够使用块级作用域。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">letTest</span>(<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-keyword">let</span> x = <span class="hljs-number">1</span>;<br>  <span class="hljs-keyword">if</span> (<span class="hljs-literal">true</span>) &#123;<br>    <span class="hljs-keyword">let</span> x = <span class="hljs-number">2</span>;  <span class="hljs-comment">// 不同的变量</span><br>    <span class="hljs-built_in">console</span>.log(x);  <span class="hljs-comment">// 2</span><br>  &#125;<br>  <span class="hljs-built_in">console</span>.log(x);  <span class="hljs-comment">// 1</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果使用var，则两个输出的都是2 。</p>
+<h3 id="3-3-JavaScript如何支持块级作用域"><a href="#3-3-JavaScript如何支持块级作用域" class="headerlink" title="3.3 JavaScript如何支持块级作用域"></a>3.3 JavaScript如何支持块级作用域</h3><p>我们已知JavaScript实现变量提升的原理，那它又是怎么在此基础上又可以实现支持块级作用域的呢？看以下代码来进行解释分析。</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><code class="hljs stylus">function foo()&#123;<br>    <span class="hljs-selector-tag">var</span> <span class="hljs-selector-tag">a</span> = <span class="hljs-number">1</span><br>    let <span class="hljs-selector-tag">b</span> = <span class="hljs-number">2</span><br>    &#123;<br>      let <span class="hljs-selector-tag">b</span> = <span class="hljs-number">3</span><br>      <span class="hljs-selector-tag">var</span> c = <span class="hljs-number">4</span><br>      let d = <span class="hljs-number">5</span><br>      console<span class="hljs-selector-class">.log</span>(a)<br>      console<span class="hljs-selector-class">.log</span>(b)<br>    &#125;<br>    console<span class="hljs-selector-class">.log</span>(b) <br>    console<span class="hljs-selector-class">.log</span>(c)<br>    console<span class="hljs-selector-class">.log</span>(d)<br>&#125;   <br><span class="hljs-function"><span class="hljs-title">foo</span><span class="hljs-params">()</span></span><br></code></pre></td></tr></table></figure>
+
+<p>当进入这个foo函数时，会创建该函数的执行上下文，首先会将所有的var变量定义存储在执行上下文的变量环境中，同时将属于函数作用域的let or const 变量存储在执行上下文的词法环境中，如图所示。</p>
+<p><img src="/images/react/2022011001.png"></p>
+<p>此时该函数的执行上下文环境已经定义完成，就需要使用JavaScript引擎执行代码，当执行到函数内部的第一个块级作用域<code>&#123;&#125;</code>时，foo函数的执行上下文如图所示。</p>
+<p><img src="/images/react/2022011002.png"></p>
+<p>此时var变量a和let变量b已经被赋值。而由于进入了let的作用域，而在词法环境中创建了一个新栈，存储该块级作用域中的变量。</p>
+<p>之后当执行到块级作用域中的<code>console.log(a)</code>时，JavaScript引擎就会按照以下步骤来搜索变量。</p>
+<p><img src="/images/react/2022011003.png"></p>
+<p>当执行完块级作用域时，词法环境中相应区间就会从栈顶弹出，如图所示。</p>
+<p><img src="/images/react/2022011004.png"></p>
+<p>如下截图所示为改代码的输出结果。</p>
+<p><img src="/images/react/2022011005.png"></p>
+<p>最后因为块级作用域所占内存已经销毁，所以找不到该let变量。</p>
+<h3 id="3-4-思考题"><a href="#3-4-思考题" class="headerlink" title="3.4 思考题"></a>3.4 思考题</h3><p>观察以下代码的输出结果。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> myname= <span class="hljs-string">&#x27;极客时间&#x27;</span><br>&#123;<br>  <span class="hljs-built_in">console</span>.log(myname) <br>  <span class="hljs-keyword">let</span> myname= <span class="hljs-string">&#x27;极客邦&#x27;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>会出现以下报错。</p>
+<p><img src="/images/react/2022011006.png"></p>
+<p>因为在块级作用域中，从<code>开始到let myname= &#39;极客邦&#39;</code>代码之间会形成一个暂时性死区，如果中间去访问变量<code>myname</code>，会报初始化之前不能访问<code>myname</code>的错误。</p>
+<h2 id="4-作用域链和闭包"><a href="#4-作用域链和闭包" class="headerlink" title="4.作用域链和闭包"></a>4.作用域链和闭包</h2><h3 id="4-1-作用域链"><a href="#4-1-作用域链" class="headerlink" title="4.1 作用域链"></a>4.1 作用域链</h3><p>当涉及到多个作用域中访问变量的情况就要提到作用域链。像以下代码。</p>
+<figure class="highlight isbl"><table><tr><td class="code"><pre><code class="hljs isbl"><span class="hljs-variable">function</span> <span class="hljs-function"><span class="hljs-title">bar</span>() &#123;</span><br><span class="hljs-function">    <span class="hljs-variable">console.log</span>(<span class="hljs-variable">myName</span>)</span><br>&#125;<br><span class="hljs-variable">function</span> <span class="hljs-function"><span class="hljs-title">foo</span>() &#123;</span><br><span class="hljs-function">    <span class="hljs-variable">var</span> <span class="hljs-variable">myName</span> = <span class="hljs-string">&quot; 极客邦 &quot;</span></span><br><span class="hljs-function">    <span class="hljs-title">bar</span>()</span><br>&#125;<br><span class="hljs-variable">var</span> <span class="hljs-variable">myName</span> = <span class="hljs-string">&quot; 极客时间 &quot;</span><br><span class="hljs-function"><span class="hljs-title">foo</span>()</span><br></code></pre></td></tr></table></figure>
+
+<p>该代码在bar函数中会输出myName的值，根据上面几节所学，该代码会生成以下的执行上下文调用栈。</p>
+<p><img src="/images/react/2022011007.png"></p>
+<p>在执行代码阶段，bar函数的执行上下文中没有的变量myName应该在哪里找呢，这里其实每一个执行上下文的环境变量中都有一个称为<code>outer</code>的外部引用，当该作用域中没有需要的变量，则会向<code>outer</code>指向的作用域中去查找。那么bar函数的<code>outer</code>会指向哪里呢？如下图所示为各个执行上下文的变量环境outer的指向。</p>
+<p><img src="/images/react/2022011008.png"></p>
+<p>为什么bar函数的outer指向的不是foo函数而是全局呢？这就涉及到<u>函数声明的位置</u>。函数声明的位置觉得了该函数的outer指向，根据该定理观察该代码，可以看出bar和foo函数的声明位置都是在全局，所以它们的outer指向也都是全局。如果bar函数在foo函数内部定义，则它的outer会指向foo函数。这涉及到了<u>词法作用域</u>。</p>
+<p>词法作用域就是指作用域是由代码中函数声明的位置来决定的，所以词法作用域是静态的作用域，通过它就能够预测代码在执行过程中如何查找标识符。</p>
+<p>如下图所示。</p>
+<p><img src="/images/react/2022011009.png"></p>
+<p>该图所示的词法作用域链顺序是：foo 函数作用域—&gt;bar 函数作用域—&gt;main 函数作用域—&gt; 全局作用域。</p>
+<h3 id="4-2-块级作用域中的变量查找"><a href="#4-2-块级作用域中的变量查找" class="headerlink" title="4.2 块级作用域中的变量查找"></a>4.2 块级作用域中的变量查找</h3><p>观察以下代码：</p>
+<figure class="highlight nix"><table><tr><td class="code"><pre><code class="hljs nix">function bar() &#123;<br>    var <span class="hljs-attr">myName</span> = <span class="hljs-string">&quot; 极客世界 &quot;</span><br>    <span class="hljs-keyword">let</span> <span class="hljs-attr">test1</span> = <span class="hljs-number">100</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-keyword">let</span> <span class="hljs-attr">myName</span> = <span class="hljs-string">&quot;Chrome 浏览器 &quot;</span><br>        console.log(test)<br>    &#125;<br>&#125;<br>function foo() &#123;<br>    var <span class="hljs-attr">myName</span> = <span class="hljs-string">&quot; 极客邦 &quot;</span><br>    <span class="hljs-keyword">let</span> <span class="hljs-attr">test</span> = <span class="hljs-number">2</span><br>    &#123;<br>        <span class="hljs-keyword">let</span> <span class="hljs-attr">test</span> = <span class="hljs-number">3</span><br>        bar()<br>    &#125;<br>&#125;<br>var <span class="hljs-attr">myName</span> = <span class="hljs-string">&quot; 极客时间 &quot;</span><br><span class="hljs-keyword">let</span> <span class="hljs-attr">myAge</span> = <span class="hljs-number">10</span><br><span class="hljs-keyword">let</span> <span class="hljs-attr">test</span> = <span class="hljs-number">1</span><br>foo()<br></code></pre></td></tr></table></figure>
+
+<p>分析其调用栈结构如下图所示：</p>
+<p><img src="/images/react/2022011010.png"></p>
+<p>图中标出的顺序就是其查找变量的顺序。</p>
+<h3 id="4-3-闭包"><a href="#4-3-闭包" class="headerlink" title="4.3 闭包"></a>4.3 闭包</h3><p>观察以下代码：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-keyword">var</span> myName = <span class="hljs-string">&quot; 极客时间 &quot;</span><br>    <span class="hljs-keyword">let</span> test1 = <span class="hljs-number">1</span><br>    <span class="hljs-keyword">const</span> test2 = <span class="hljs-number">2</span><br>    <span class="hljs-keyword">var</span> innerBar = &#123;<br>        <span class="hljs-attr">getName</span>:<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<br>            <span class="hljs-built_in">console</span>.log(test1)<br>            <span class="hljs-keyword">return</span> myName<br>        &#125;,<br>        <span class="hljs-attr">setName</span>:<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">newName</span>)</span>&#123;<br>            myName = newName<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> innerBar<br>&#125;<br><span class="hljs-keyword">var</span> bar = foo()<br>bar.setName(<span class="hljs-string">&quot; 极客邦 &quot;</span>)<br>bar.getName()<br><span class="hljs-built_in">console</span>.log(bar.getName())<br></code></pre></td></tr></table></figure>
+
+<p>其中，当执行代码时，会运行函数foo，也就会生成foo的执行上下文，但是执行完后foo的执行上下文就会在<u>内存中销毁</u>。但是在后面两行中却调用了foo的内部方法setName和getName，而这两个方法则使用了其外部函数foo函数的变量，此时变量myName和test1不会被销毁，而变成了<u>专属</u><code>bar.setName</code>和<code>bar.getName</code>方法能使用的变量，这种情况就可以把这些只能够被特定函数访问的变量集合称之为<u>闭包</u>。</p>
+<p><img src="/images/react/2022011011.png"></p>
+<p>那这些闭包是如何使用的呢？如下图所示：</p>
+<p><img src="/images/react/2022011012.png"></p>
+<p>据图可知其执行顺序为setName函数执行上下文-&gt;该函数的闭包-&gt;全局执行上下文。</p>
+<p>也可以利用浏览器中的开发者工具来跟踪其查找变量顺序，如图所示。</p>
+<p><img src="/images/react/2022011013.png"></p>
+<h3 id="4-4-闭包回收"><a href="#4-4-闭包回收" class="headerlink" title="4.4 闭包回收"></a>4.4 闭包回收</h3><p>如果引用闭包的函数是全局变量，那么该闭包就会一直存在直到页面关闭，如果引用闭包的函数是局部变量，那么该闭包会随着函数的销毁而销毁。所以使用闭包需要注意：<u>当闭包会一直使用则定义其函数为全局变量，否则就定义为局部变量。</u></p>
+<h3 id="4-5-思考题"><a href="#4-5-思考题" class="headerlink" title="4.5 思考题"></a>4.5 思考题</h3><p>观察下面代码，其输出结果是什么，会形成闭包吗？</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> bar = &#123;<br>    <span class="hljs-attr">myName</span>:<span class="hljs-string">&quot;time.geekbang.com&quot;</span>,<br>    <span class="hljs-attr">printName</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;<br>        <span class="hljs-built_in">console</span>.log(myName)<br>    &#125;    <br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-keyword">let</span> myName = <span class="hljs-string">&quot; 极客时间 &quot;</span><br>    <span class="hljs-keyword">return</span> bar.printName<br>&#125;<br><span class="hljs-keyword">let</span> myName = <span class="hljs-string">&quot; 极客邦 &quot;</span><br><span class="hljs-keyword">let</span> _printName = foo()<br>_printName()<br>bar.printName()<br></code></pre></td></tr></table></figure>
+
+<p>这道题其实是个障眼法，只需要确定好函数调用栈就可以很轻松的解答，调用了foo()后，返回的是bar.printName，后续就跟foo函数没有关系了，所以结果就是调用了两次bar.printName()，根据词法作用域，<u>结果都是“极客邦”，也不会形成闭包</u>。</p>
+<p>如下图所示。</p>
+<p><img src="/images/react/2022011014.png"></p>
+<p>（其实我也有点糊涂了。）</p>
+<h2 id="5-this"><a href="#5-this" class="headerlink" title="5.this"></a>5.this</h2><h3 id="5-1-JavaScript中的this是什么？"><a href="#5-1-JavaScript中的this是什么？" class="headerlink" title="5.1 JavaScript中的this是什么？"></a>5.1 JavaScript中的this是什么？</h3><p>this其实和执行上下文有关，执行上下文一共有三种，分别是<u>全局执行上下文、函数执行上下文和eval执行上下文</u>。每个执行上下文中都包括我们已经知道的变量环节、词法环境以及outer。除此之外，this也包含在执行上下文中。所以根据不同的执行上下文，this也有所不同。</p>
+<h3 id="5-2-全局执行上下文中的this"><a href="#5-2-全局执行上下文中的this" class="headerlink" title="5.2 全局执行上下文中的this"></a>5.2 全局执行上下文中的this</h3><p>直接在浏览器的开发者工具控制台中输入<code>console.log(this)</code>，可以看到输出的是window对象，因此可知，<u>全局执行上下文中的this指向window对象</u>，这也是this和作用域链的唯一交点，作用域链最底端包含了window对象。</p>
+<h3 id="5-3-函数执行上下文中的this"><a href="#5-3-函数执行上下文中的this" class="headerlink" title="5.3 函数执行上下文中的this"></a>5.3 函数执行上下文中的this</h3><p>观察以下这段代码：</p>
+<figure class="highlight isbl"><table><tr><td class="code"><pre><code class="hljs isbl"><span class="hljs-variable">function</span> <span class="hljs-function"><span class="hljs-title">foo</span>()&#123;</span><br><span class="hljs-function">  <span class="hljs-variable">console.log</span>(<span class="hljs-variable">this</span>)</span><br>&#125;<br><span class="hljs-function"><span class="hljs-title">foo</span>()</span><br></code></pre></td></tr></table></figure>
+
+<p>观察输出结果会发现，这个this依旧是指向window。那么可以改变函数内的this指向吗？可以的，有以下几种方法。</p>
+<p><strong>1.通过函数的call方法设置</strong></p>
+<p>如下列代码所示：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> bar = &#123;<br>  <span class="hljs-attr">myName</span> : <span class="hljs-string">&quot; 极客邦 &quot;</span>,<br>  <span class="hljs-attr">test1</span> : <span class="hljs-number">1</span><br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>)</span>&#123;<br>  <span class="hljs-built_in">this</span>.myName = <span class="hljs-string">&quot; 极客时间 &quot;</span><br>&#125;<br>foo.call(bar)<br><span class="hljs-built_in">console</span>.log(bar)<br><span class="hljs-built_in">console</span>.log(myName)<br></code></pre></td></tr></table></figure>
+
+<p>通过<code>foo.call(bar)</code>使得foo函数执行上下文中的this指向了bar。除了<u>call方法</u>，也可以使用<u>bind和apply方法</u>来设置函数执行上下文中的this。</p>
+<p><strong>2.通过对象调用方法设置</strong></p>
+<p>如下代码所示：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> myObj = &#123;<br>  <span class="hljs-attr">name</span> : <span class="hljs-string">&quot; 极客时间 &quot;</span>, <br>  <span class="hljs-attr">showThis</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">this</span>)<br>  &#125;<br>&#125;<br>myObj.showThis()<br></code></pre></td></tr></table></figure>
+
+<p>当执行<code>myObj.showThis()</code>时就会使得<code>showThis</code>中的<code>this</code>指向<code>myObj</code>对象。</p>
+<p><strong>3.通过构造函数中设置</strong></p>
+<p>如下代码所示：</p>
+<figure class="highlight actionscript"><table><tr><td class="code"><pre><code class="hljs actionscript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">CreateObj</span><span class="hljs-params">()</span></span>&#123;<br>  <span class="hljs-keyword">this</span>.name = <span class="hljs-string">&quot; 极客时间 &quot;</span><br>&#125;<br><span class="hljs-keyword">var</span> myObj = <span class="hljs-keyword">new</span> CreateObj()<br></code></pre></td></tr></table></figure>
+
+<p>使用<code>new</code>关键字来使函数中的this指向了新对象本身。</p>
+<h3 id="5-3-this的涉及缺陷以及应对方案"><a href="#5-3-this的涉及缺陷以及应对方案" class="headerlink" title="5.3 this的涉及缺陷以及应对方案"></a>5.3 this的涉及缺陷以及应对方案</h3><p>比方说嵌套函数中的this<u>没有继承关系</u>，如段代码所示：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> myObj = &#123;<br>  <span class="hljs-attr">name</span> : <span class="hljs-string">&quot; 极客时间 &quot;</span>, <br>  <span class="hljs-attr">showThis</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">this</span>)<br>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bar</span>(<span class="hljs-params"></span>)</span>&#123;<span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">this</span>)&#125;<br>    bar()<br>  &#125;<br>&#125;<br>myObj.showThis()<br></code></pre></td></tr></table></figure>
+
+<p>直觉上我们会以为bar函数内部的this也是指向showThis也就是它的外部函数，但其实它指向的是window，解决方法有两种，第一种是在bar函数外使用<code>var that=this</code>，在bar函数内使用that就代指showThis中的this，如下代码所示：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> myObj = &#123;<br>  <span class="hljs-attr">name</span> : <span class="hljs-string">&quot; 极客时间 &quot;</span>, <br>  <span class="hljs-attr">showThis</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">this</span>)<br>    <span class="hljs-keyword">var</span> that = <span class="hljs-built_in">this</span><br>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bar</span>(<span class="hljs-params"></span>)</span>&#123;<br>      that.name = <span class="hljs-string">&quot; 极客邦 &quot;</span><br>    &#125;<br>    bar()<br>  &#125;<br>&#125;<br>myObj.showThis()<br><span class="hljs-built_in">console</span>.log(myObj.name)<br><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">window</span>.name)<br></code></pre></td></tr></table></figure>
+
+<p>第二个方法是使用ES6中的<u>箭头函数</u>来声明bar函数，如下段代码所示：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">var</span> myObj = &#123;<br>  <span class="hljs-attr">name</span> : <span class="hljs-string">&quot; 极客时间 &quot;</span>, <br>  <span class="hljs-attr">showThis</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">this</span>)<br>    <span class="hljs-keyword">var</span> bar = <span class="hljs-function">()=&gt;</span>&#123;<br>      <span class="hljs-built_in">this</span>.name = <span class="hljs-string">&quot; 极客邦 &quot;</span><br>      <span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">this</span>)<br>    &#125;<br>    bar()<br>  &#125;<br>&#125;<br>myObj.showThis()<br><span class="hljs-built_in">console</span>.log(myObj.name)<br><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">window</span>.name)<br></code></pre></td></tr></table></figure>
+
+<p>因为箭头函数不会创建自身的执行上下文。</p>
+]]></content>
+      <categories>
+        <category>浏览器</category>
+      </categories>
+      <tags>
+        <tag>浏览器</tag>
+        <tag>JavaScript</tag>
+        <tag>前端面试</tag>
       </tags>
   </entry>
   <entry>
