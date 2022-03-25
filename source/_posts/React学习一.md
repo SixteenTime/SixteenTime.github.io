@@ -15,37 +15,37 @@ categories:
 ```html
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title></title>
-		<script src="../js/react.development.js" crossorigin></script>
-		<script src="../js/react-dom.development.js" crossorigin></script>
-		<!-- 上面两个Js文件是有固定的引用先后顺序 -->
-		<script src="../js/babel.min.js"></script>
-	</head>
-	<body>
-		<div id="test1"></div>
-		
-	</body>
-	<script type="text/babel">
-		function fun(name){
-			return name+' hh';
-		}
-		class HelloMsg extends React.Component{
-			render(){
-				return (
-				<div>
-				  <div>hello React</div>
-				  <h3>{this.props.name}</h3>
-				  <h2>{2+3}</h2>
-				  <h1>{fun('abc')}</h1>
-				</div>
-				)
-			}
-		}
-		ReactDOM.render(<HelloMsg name="hhh"/>,document.getElementById("test1"))
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <script src="../js/react.development.js" crossorigin></script>
+        <script src="../js/react-dom.development.js" crossorigin></script>
+        <!-- 上面两个Js文件是有固定的引用先后顺序 -->
+        <script src="../js/babel.min.js"></script>
+    </head>
+    <body>
+        <div id="test1"></div>
 
-		</script>
+    </body>
+    <script type="text/babel">
+        function fun(name){
+            return name+' hh';
+        }
+        class HelloMsg extends React.Component{
+            render(){
+                return (
+                <div>
+                  <div>hello React</div>
+                  <h3>{this.props.name}</h3>
+                  <h2>{2+3}</h2>
+                  <h1>{fun('abc')}</h1>
+                </div>
+                )
+            }
+        }
+        ReactDOM.render(<HelloMsg name="hhh"/>,document.getElementById("test1"))
+
+        </script>
 </html>
 ```
 
@@ -59,20 +59,20 @@ categories:
 
 ```javascript
 function fun(name){
-			return name+' hh';
-	}
+            return name+' hh';
+    }
 class HelloMsg extends React.Component{
-	render(){
-		return (
-			<div>
-		      <div>hello React</div>
-			  <h3>{this.props.name}</h3>
-			  <h2>{2+3}</h2>
-		      <h1>{fun('abc')}</h1>
-			</div>
-			)
-		}
-	}
+    render(){
+        return (
+            <div>
+              <div>hello React</div>
+              <h3>{this.props.name}</h3>
+              <h2>{2+3}</h2>
+              <h1>{fun('abc')}</h1>
+            </div>
+            )
+        }
+    }
 ReactDOM.render(<HelloMsg name="hhh"/>,document.getElementById("test1"))
 ```
 
@@ -89,10 +89,10 @@ React 只更新它需要更新的部分,尽管每一秒我们都会新建一个�
 ```javascript
 //自定义元素element
 const element = (
-	<div>
-		<h1>h1h1</h1>
-		<h2>h2h2</h2>
-	</div>
+    <div>
+        <h1>h1h1</h1>
+        <h2>h2h2</h2>
+    </div>
 );
 ReactDOM.render(element,document.getElementById("test1"))
 ```
@@ -104,13 +104,13 @@ React可以自定义复杂的组件，有两种自定义组件的方法，分别
 ```
 // 用函数的方式自定义组件
 function HelloMsg(props){
-	return <h1>hello~ {props.name} !</h1>
+    return <h1>hello~ {props.name} !</h1>
 }
 // ES6的类自定义组件
 class HiMsg extends React.Component{
-	render(){
-			return <h2>hi~ {this.props.name}</h2>
-	}	
+    render(){
+            return <h2>hi~ {this.props.name}</h2>
+    }    
 }
 ```
 
@@ -123,51 +123,49 @@ class HiMsg extends React.Component{
 ```html
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title></title>
-		<script src="../js/react.development.js" crossorigin></script>
-		<script src="../js/react-dom.development.js" crossorigin></script>
-		<!-- 上面两个Js文件是有固定的引用先后顺序 -->
-		<script src="../js/babel.min.js"></script>
-	</head>
-	<body>
-		<div id="test1"></div>
-		
-	</body>
-	<script type="text/babel">
-		// 组合组件
-		
-		// 用函数的方式自定义组件
-		// 自定义组件可以实现交互传参
-		function HelloMsg(props){
-			return <h1>hello~ {props.name} !</h1>
-		}
-		// ES6的类自定义组件
-		class HiMsg extends React.Component{
-			render(){
-				return <h2>hi~ {this.props.name}</h2>
-			}
-			
-		}
-		
-		// 组合组件
-		function App(){
-			return (
-			  <div>
-				  <HelloMsg name="zhangsan"/>
-				  <HiMsg name="zhangsan"/>
-				  <HelloMsg name="Mody"/>
-				  <HiMsg name="Mody"/>
-				  <HelloMsg name="Recy"/>
-				  <HiMsg name="Recy"/>
-			  </div>
-			)
-		}
-		ReactDOM.render(<App/>,document.getElementById("test1"))
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <script src="../js/react.development.js" crossorigin></script>
+        <script src="../js/react-dom.development.js" crossorigin></script>
+        <!-- 上面两个Js文件是有固定的引用先后顺序 -->
+        <script src="../js/babel.min.js"></script>
+    </head>
+    <body>
+        <div id="test1"></div>
 
-		</script>
+    </body>
+    <script type="text/babel">
+        // 组合组件
+
+        // 用函数的方式自定义组件
+        // 自定义组件可以实现交互传参
+        function HelloMsg(props){
+            return <h1>hello~ {props.name} !</h1>
+        }
+        // ES6的类自定义组件
+        class HiMsg extends React.Component{
+            render(){
+                return <h2>hi~ {this.props.name}</h2>
+            }
+
+        }
+
+        // 组合组件
+        function App(){
+            return (
+              <div>
+                  <HelloMsg name="zhangsan"/>
+                  <HiMsg name="zhangsan"/>
+                  <HelloMsg name="Mody"/>
+                  <HiMsg name="Mody"/>
+                  <HelloMsg name="Recy"/>
+                  <HiMsg name="Recy"/>
+              </div>
+            )
+        }
+        ReactDOM.render(<App/>,document.getElementById("test1"))
+
+        </script>
 </html>
-
 ```
-
