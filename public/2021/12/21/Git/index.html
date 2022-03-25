@@ -1,0 +1,529 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode=light>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Git相关知识点 - 16:21:59</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="google" content="notranslate" />
+  
+  <meta name="description" content="
+本文来源于https://github.com/Cy...">
+  <meta name="author" content="十六太">
+  <link rel="icon" href="/images/icons/logo_16.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="/images/icons/logo_32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/images/icons/logo_180.png" sizes="180x180">
+  <meta rel="mask-icon" href="/images/icons/logo_128.svg" color="#333333">
+  
+    <meta rel="msapplication-TileImage" content="/images/icons/logo_144.png">
+    <meta rel="msapplication-TileColor" content="#000000">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+    
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1445822_p6ry5n7lrr.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  
+
+  
+    
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/xcode.min.css" name="highlight-style" mode="light">
+
+      
+        
+        
+<link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/solarized-dark.min.css" name="highlight-style" mode="dark">
+
+      
+  
+
+  <script>
+    var CONFIG = window.CONFIG || {};
+    var ZHAOO = window.ZHAOO || {};
+    CONFIG = {
+      isHome: false,
+      fancybox: true,
+      pjax: false,
+      loading: {
+        gif: '/images/theme/loading.gif',
+        lottie: ''
+      },
+      lazyload: {
+        enable: true,
+        only_post: 'false',
+        loading: {
+          gif: '/images/theme/loading.gif',
+          lottie: ''
+        }
+      },
+      donate: {
+        enable: false,
+        alipay: '',
+        wechat: ''
+      },
+      galleries: {
+        enable: true
+      },
+      fab: {
+        enable: true,
+        always_show: true
+      },
+      carrier: {
+        enable: true
+      },
+      daovoice: {
+        enable: true
+      },
+      preview: {
+        background: {
+          default: '',
+          api: ''
+        },
+        motto: {
+          default: '啊！她好美 她好美 她好美！',
+          typing: true,
+          api: '',
+          data_contents: '["data","content"]'
+        },
+      },
+      qrcode: {
+        enable: false,
+        type: 'url',
+        image: 'https://pic.izhaoo.com/weapp-code.jpg',
+      },
+      toc: {
+        enable: true
+      },
+      scrollbar: {
+        type: 'default'
+      },
+      notification: {
+        enable: false,
+        delay: 4500,
+        list: '',
+        page_white_list: '',
+        page_black_list: ''
+      },
+      search: {
+        enable: true,
+        path: 'search.xml'
+      }
+    }
+  </script>
+
+  
+
+  
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="16:21:59" type="application/atom+xml">
+</head>
+
+<body class="lock-screen">
+  <div class="loading" id="loading"></div>
+  
+    
+
+
+  <nav class="navbar">
+    <div class="left">
+      
+        <i class="iconfont iconhome j-navbar-back-home"></i>
+      
+      
+      
+        <i class="iconfont iconmoono" id="color-toggle" color-toggle="light"></i>
+      
+      
+        <i class="iconfont iconsearch j-navbar-search"></i>
+      
+    </div>
+    <div class="center">Git相关知识点</div>
+    <div class="right">
+      <i class="iconfont iconmenu j-navbar-menu"></i>
+    </div>
+    
+  </nav>
+
+  
+  
+
+<nav class="menu">
+  <div class="menu-container">
+    <div class="menu-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <ul class="menu-content"><li class="menu-item">
+        <a href="/ " class="underline "> 首页</a>
+      </li><li class="menu-item">
+        <a href="/galleries/ " class="underline "> 相册</a>
+      </li><li class="menu-item">
+        <a href="/archives/ " class="underline "> 归档</a>
+      </li><li class="menu-item">
+        <a href="/tags/ " class="underline "> 标签</a>
+      </li><li class="menu-item">
+        <a href="/categories/ " class="underline "> 分类</a>
+      </li><li class="menu-item">
+        <a href="/about/ " class="underline "> 关于</a>
+      </li></ul>
+    
+      <div class="menu-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+    
+  </div>
+</nav>
+  <main id="main">
+  <div class="article-wrap">
+    <div class="row container">
+      <div class="col-xl-3"></div>
+      <div class="col-xl-6"><article class="article">
+  <div class="wrap">
+    <section class="head">
+  <img   class="lazyload" data-original="/images/theme/post-image.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="  draggable="false">
+  <div class="head-mask">
+    <h1 class="head-title">Git相关知识点</h1>
+    <div class="head-info">
+      <span class="post-info-item"><i class="iconfont iconcalendar"></i>十二月 21, 2021</span>
+      
+        <span class="post-info-item">
+          <i class="iconfont iconeye"></i><span id="/2021/12/21/Git/" class="leancloud-counter" data-flag-title="Git相关知识点"></span>
+        </span>
+        <span class="post-info-item">
+          <i class="iconfont iconheart"></i><span id="/2021/12/21/Git/" class="leancloud-like" data-flag-title="Git相关知识点"></span>
+        </span>
+      
+      <span class="post-info-item"><i class="iconfont iconfont-size"></i>2208</span>
+    </div>
+  </div>
+</section>
+    <section class="main">
+      <section class="content">
+        
+        <hr>
+<p><em>本文来源于<a target="_blank" rel="noopener" href="https://github.com/CyC2018/CS-Notes%EF%BC%8C%E6%98%AF%E5%9C%A8%E9%98%85%E8%AF%BB%E8%AF%A5%E8%B5%84%E6%BA%90%E6%97%B6%E7%9A%84%E7%AC%94%E8%AE%B0%E6%95%B4%E7%90%86%EF%BC%8C%E4%BD%86%E6%9C%89%E5%A4%A7%E9%83%A8%E5%88%86%E7%9A%84%E5%86%85%E5%AE%B9%E5%92%8C%E5%8E%9F%E6%96%87%E4%B8%80%E8%87%B4%E3%80%82%E5%B9%B6%E4%B8%94%E5%9B%A0%E4%B8%BA%E6%9C%AC%E6%AC%A1%E5%A4%8D%E4%B9%A0%E6%98%AF%E4%BA%89%E5%AF%B9%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95%E7%9A%84%E5%87%86%E5%A4%87%EF%BC%8C%E6%89%80%E4%BB%A5%E4%B9%9F%E4%BC%9A%E9%80%89%E6%8B%A9%E6%80%A7%E5%A4%8D%E4%B9%A0%EF%BC%8C%E5%AF%B9%E4%BA%8E%E6%B7%B1%E5%88%BB%E7%9A%84%EF%BC%8C%E8%AE%A1%E7%AE%97%E7%B1%BB%E7%9F%A5%E8%AF%86%E7%82%B9%E5%8F%AA%E4%BC%9A%E7%B2%97%E7%95%A5%E6%89%AB%E8%BF%87">https://github.com/CyC2018/CS-Notes，是在阅读该资源时的笔记整理，但有大部分的内容和原文一致。并且因为本次复习是争对前端面试的准备，所以也会选择性复习，对于深刻的，计算类知识点只会粗略扫过</a></em>。</p>
+<hr>
+<h2 id="1-集中式与分布式"><a href="#1-集中式与分布式" class="headerlink" title="1.集中式与分布式"></a>1.集中式与分布式</h2><p>Git属于<u>分布式版本控制系统</u>，分布式的好处是每个成员的电脑上都有一份完整代码，而<u>集中式</u>的只有中心服务器才有。并且集中式版本控制系统一旦中心服务器出问题所有成员都无法使用，还必须依赖连网使用，分布式则不存在这些问题。分布式版本控制建立新分支、合并分支操作迅速，集中式新建一个分支相当于复制一份完整代码，操作较慢。</p>
+<h2 id="2-中心服务器"><a href="#2-中心服务器" class="headerlink" title="2.中心服务器"></a>2.中心服务器</h2><p>Git的中心服务器是<u>GitHub</u>。中心服务器用来交换成员的修改。</p>
+<h2 id="3-工作流"><a href="#3-工作流" class="headerlink" title="3.工作流"></a>3.工作流</h2><p>新建一个目录并且Git初始化后，该目录就成为一个工作仓库。该工作区有一个<code>.git</code>文件夹，它是Git的版本库。Git 的版本库有一个称为 <code>Stage</code> 的暂存区以及最后的 <code>History</code> 版本库，<code>History</code> 存储所有分支信息，使用一个 <code>HEAD</code> 指针指向当前分支。</p>
+<p>具体工作流如下图所示：</p>
+<p><img   class="lazyload" data-original="/images/react/2021122111.png" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" ></p>
+<p>执行命令<code>git add files</code> 将仓库内的文件存入<code>Stage</code>缓存区，执行<code>git commit</code>命令将这些存在<code>Stage</code>的文件数据存入<code>History</code>区，此时<code>Stage</code>也被清空。执行命令<code>git reset --files</code>使用当前分支上的修改覆盖暂存区，用来撤销最后一次 <code>git add files</code>，执行命令<code>git checkout --file</code> 使用暂存区的修改覆盖工作目录，用来撤销本地修改。</p>
+<h2 id="4-分支实现和冲突"><a href="#4-分支实现和冲突" class="headerlink" title="4.分支实现和冲突"></a>4.分支实现和冲突</h2><p><code>HEAD</code>指针总是指向当前分支指针，在新建分支时，新建的分支指针会指向当前节点，并且<code>HEAD</code>指针指向新分支指针。每次提交只有当前分支指针会改变。</p>
+<p>如果两个分支都进行了修改，当它们合并时会产生冲突，必须删除冲突才能进行合并。</p>
+<h2 id="5-SSH传输设置"><a href="#5-SSH传输设置" class="headerlink" title="5.SSH传输设置"></a>5.SSH传输设置</h2><p>Git 仓库和 Github 中心仓库之间的传输是通过 SSH 加密。</p>
+<p>本地设置SSH Key可以通过命令<code>ssh-keygen -t rsa -C &quot;youremail@example.com&quot;</code>来实现。其中出现在<code>.ssh</code>目录的<code>id_rsa.pub</code>里的数据就是SSH的公钥。</p>
+<h2 id="6-储存"><a href="#6-储存" class="headerlink" title="6.储存"></a>6.储存</h2><p>在一个分支操作后，如果还没有将修改提交到分支上，此时进行切换分支，那么另一个分支上也会有修改内容，这是所有分支公用一个工作区的缘故。可以使用命令<code>git stash</code>将当前分支的修改存储起来，此时当前工作区的所有修改都会被存到栈中，也就是说当前工作区是干净的，没有任何未提交的修改。此时就可以安全的切换到其它分支上了。</p>
+<h2 id="7-Git常用命令"><a href="#7-Git常用命令" class="headerlink" title="7.Git常用命令"></a>7.Git常用命令</h2><p><strong>初始化操作</strong></p>
+<p><code>git init</code> 设置本地目录为新的Git仓库</p>
+<p><code>git clone [url]</code> 克隆一个代码仓库</p>
+<p><strong>增加文件操作</strong></p>
+<p><code>git add [file1] [file2]</code> 增加file1、file2到暂存区</p>
+<p><code>git add .</code> 将当前目录下全部文件存入暂存区。</p>
+<p><strong>删除文件操作</strong></p>
+<p><code>git rm [file1] [file2]</code> 删除指定文件，并在暂存区中也删除</p>
+<p><strong>代码提交操作</strong></p>
+<p><code>git commit -m [message]</code> 提交暂存区到仓库区（History），并备注消息</p>
+<p><code>git commit -a</code> 直接从暂存区提交进仓库区</p>
+<p><strong>分支相关操作</strong></p>
+<p><code>git branch</code> 列出所有本地分支</p>
+<p><code>git branch -r</code> 列出所有远程分支</p>
+<p><code>git branch -a</code> 列出所有分支，包括本地分支和远程分支。</p>
+<p><code>git branch [branch]</code> 新建分支</p>
+<p><code>git checkout [branch-name]</code> 切换到指定的分支进行工作</p>
+<p><code>git merge [branch]</code> 合并指定分支到当前分支</p>
+<p><code>git branch -d [branch-name]</code> 删除指定的本地分支</p>
+<p><code>git push origin --delete [branch-name]</code> 删除远程分支</p>
+<p><code>git branch -dr [remote/branch]</code> 删除远程分支</p>
+<p><strong>查看信息操作</strong></p>
+<p><code>git status</code> 显示有变更文件</p>
+<p><code>git log</code> 显示当前分支的版本历史</p>
+<p><strong>远程同步操作</strong></p>
+<p><code>git remote -v</code> 显示所有的远程仓库</p>
+<p><code>git remote show [remote]</code> 显示某个远程仓库信息</p>
+<p><code>git remote add [remote]</code> 新增某个远程仓库</p>
+<p><code>git pull [remote] [branch]</code> 从远程仓库的某一分支拉取到本地</p>
+<p><code>git push [remote] [branch]</code> 上传本地指定分支到远程仓库</p>
+<p><code>git push -f [remote] [branch]</code> 强制推送当前分支到远程仓库，即使有冲突</p>
+<p><code>git push [remote] --all</code> 推送所有分支到远程仓库</p>
+<p><strong>撤销操作</strong></p>
+<p><code>git checkout [commit] [file]</code> 恢复某个commit的指定文件到暂存区和工作区</p>
+<p><code>git reset --hard</code> 重置暂存区与工作区，与上一次commit保持一致</p>
+<p><code>git reset [commit]</code> 重置当前分支指针为指定commit，同时重置暂存区，但工作区不变</p>
+<p><code>git reset --hard [commit]</code> 重置当前HEAD为指定commit，同时重置暂存区与工作区。</p>
+
+      </section>
+      <section class="extra">
+        
+          <ul class="copyright">
+  
+    <li><strong>本文作者：</strong>十六太</li>
+    <li><strong>本文链接：</strong><a href="https://sixteentime.github.io/2021/12/21/Git/index.html" title="https:&#x2F;&#x2F;sixteentime.github.io&#x2F;2021&#x2F;12&#x2F;21&#x2F;Git&#x2F;index.html">https:&#x2F;&#x2F;sixteentime.github.io&#x2F;2021&#x2F;12&#x2F;21&#x2F;Git&#x2F;index.html</a></li>
+    <li><strong>版权声明：</strong>本博客所有文章均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" title="BY-NC-SA" target="_blank" rel="noopener">BY-NC-SA</a> 许可协议，转载请注明出处！</li>
+  
+</ul>
+        
+        
+        
+  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95%EF%BC%8CGit/" rel="tag">前端面试，Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag">学习</a></li></ul> 
+
+        
+  <nav class="nav">
+    <a href="/2021/12/21/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/"><i class="iconfont iconleft"></i>正则表达式</a>
+    <a href="/2021/12/21/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E5%A4%8D%E4%B9%A0/">数据库系统原理基础知识点<i class="iconfont iconright"></i></a>
+  </nav>
+
+      </section>
+      
+    </section>
+  </div>
+</article></div>
+      <div class="col-xl-3">
+        
+          
+  <aside class="toc-wrap">
+    <h3 class="toc-title">文章目录：</h3>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%9B%86%E4%B8%AD%E5%BC%8F%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F"><span class="toc-text">1.集中式与分布式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%B8%AD%E5%BF%83%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-text">2.中心服务器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="toc-text">3.工作流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%88%86%E6%94%AF%E5%AE%9E%E7%8E%B0%E5%92%8C%E5%86%B2%E7%AA%81"><span class="toc-text">4.分支实现和冲突</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-SSH%E4%BC%A0%E8%BE%93%E8%AE%BE%E7%BD%AE"><span class="toc-text">5.SSH传输设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%82%A8%E5%AD%98"><span class="toc-text">6.储存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-text">7.Git常用命令</span></a></li></ol>
+  </aside>
+
+        
+      </div>
+    </div>
+  </div>
+</main>
+  
+
+<footer class="footer">
+  <div class="footer-social"><a 
+        href="https://github.com/sixteentime "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color= '#9f7be1'" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  icongithub-fill "></i>
+      </a><a 
+        href="mailto:1476827275@163.com "
+        target="_blank"
+        class="footer-social-item"
+        onMouseOver="this.style.color=#FF3B00" 
+        onMouseOut="this.style.color='#33333D'">
+          <i class="iconfont  iconmail"></i>
+      </a></div>
+  
+    <div class="footer-copyright"><p>Powered by <a target="_blank" href="https://hexo.io">Hexo</a>  |  Theme - <a target="_blank" href="https://github.com/izhaoo/hexo-theme-zhaoo">zhaoo</a></p></div>
+  
+</footer>
+  
+      <div class="fab fab-plus">
+    <i class="iconfont iconplus"></i>
+  </div>
+  
+    <div class="fab fab-like">
+      <i class="iconfont iconheart"></i>
+    </div>
+  
+  
+    <div class="fab fab-daovoice">
+      <i class="iconfont iconcomment"></i>
+    </div>
+  
+  
+  <div class="fab fab-up">
+    <i class="iconfont iconcaret-up"></i>
+  </div>
+  
+  
+  
+    
+<script src="/js/color-mode.js"></script>
+
+  
+  
+    <div class="search">
+  <div class="search-container">
+    <div class="search-close">
+      <i class="iconfont iconbaseline-close-px"></i>
+    </div>
+    <div class="search-input-wrapper">
+      <i class="search-input-icon iconfont iconsearch"></i>
+      <input class="search-input" type="search" id="search-input" placeholder="Search..." autofocus autocomplete="off"
+        autocorrect="off" autocapitalize="off">
+    </div>
+    <div class="search-output" id="search-output"></div>
+  </div>
+</div>
+  
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+
+
+
+
+
+  
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+
+
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
+
+
+
+
+
+<script src="/js/utils.js"></script>
+<script src="/js/script.js"></script>
+
+
+
+  <script>
+  $.getScript("//cdn.jsdelivr.net/npm/leancloud-storage@4.1.0/dist/av-min.js", () => {
+
+    AV.init({
+      appId: 'QDLldNrn5PdbTkPouKxy9MTL-gzGzoHsz',
+      appKey: 'SMKzGNQEHmaffzyfgV05h8eL',
+      serverURLs: 'https://leancloud.cn/',
+    });
+
+    const Counter = AV.Object.extend("Counter");
+    const Like = AV.Object.extend("Like");
+
+    const showCount = (Counter) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud-counter").each(async (e) => {
+        const url = $(".leancloud-counter").eq(e).attr('id').trim();
+        const query = new AV.Query("Counter");
+        query.equalTo("words", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud-counter").eq(e).text(count ? count : 0);
+      });
+    }
+
+    const addCount = (Counter) => {
+      const url = $(".leancloud-counter").length === 1 ? $(".leancloud-counter").attr('id').trim() : 'https://sixteentime.github.io';
+      var query = new Counter;
+      query.save({
+        words: url
+      });
+    }
+
+    const showLike = (Like) => {
+      const asyncLimit = new AsyncLimit(2);
+      $(".leancloud-like").each(async (e) => {
+        const url = $(".leancloud-like").eq(e).attr('id').trim();
+        const query = new AV.Query("Like");
+        query.equalTo("path", url);
+        let count = await asyncLimit.run(() => query.count());
+        $(".leancloud-like").eq(e).text(count ? count : 0);
+      });
+    }
+
+    const addLike = (Like) => {
+      const url = $(".leancloud-like").length === 1 ? $(".leancloud-like").attr('id').trim() : 'https://sixteentime.github.io';
+      var query = new Like;
+      query.save({
+        path: url,
+        nickName: 'Anonymous'
+      });
+      $(".leancloud-like").addClass('islike');
+      $(".fab-like").children(".iconfont").removeClass("iconheart").addClass("iconheart-fill").css("color", "#eb3223");
+      ZHAOO.zui.message({ text: '爱你哦~', type: 'success' });
+      setTimeout(() => showLike(Like), 1000);
+    }
+
+    const handleLikeClick = () => {
+      const isLike = $(".leancloud-like").length === 1 && $(".leancloud-like").hasClass('islike') ? true : false;
+      if (isLike) {
+        ZHAOO.zui.message({ text: '小心心不可以收回呢~', type: 'warning' });
+      } else {
+        addLike(Like);
+      }
+    }
+
+    $(function () {
+      addCount(Counter);
+      showCount(Counter);
+      showLike(Like);
+      $(".fab-like").on("click", function () {
+        handleLikeClick();
+      });
+    });
+
+  });
+</script>
+
+
+
+  
+
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i["DaoVoiceObject"] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    a.charset = "utf-8";
+    m.parentNode.insertBefore(a, m)
+  })(window, document, "script", "https://widget.daovoice.io/widget/0f81ff2f.js", "daovoice")
+  daovoice('init', {
+    app_id: "832fad8c"
+  }, {
+    launcher: {
+      disableLauncherIcon: true,
+    },
+  });
+  daovoice('update');
+</script>
+
+
+
+  <script>
+    (function () {
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      } else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
