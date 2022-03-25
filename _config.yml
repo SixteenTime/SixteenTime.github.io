@@ -63,5 +63,4 @@ theme: zhaoo
 deploy:
   type: git
   repo: 
-    coding: git@e.coding.net:sixteentime/sixteentime/sixteentime.git,main 
     github: git@github.com:SixteenTime/SixteenTime.github.io.git,main 
