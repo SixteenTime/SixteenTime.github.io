@@ -6,9 +6,9 @@
 menu:
   home: / || 首页
   galleries: /galleries/ || 相册
-  archives: /archives/ || 归档
-  tags: /tags/ || 标签
-  categories: /categories/ || 分类
+  # archives: /archives/ || 归档
+  # tags: /tags/ || 标签
+  # categories: /categories/ || 分类
   about: /about/ || 关于
 
 # Color
@@ -30,11 +30,11 @@ color:
 
 # Favicon
 favicon:
-  small: /images/icons/logo_16.png
-  medium: /images/icons/logo_32.png
-  apple_touch_icon: /images/icons/logo_180.png
-  safari_pinned_tab: /images/icons/logo_128.svg
-  msapplication: /images/icons/logo_144.png
+  small: /images/icons/moon16.png
+  medium: /images/icons/moon32.png
+  apple_touch_icon: /images/icons/moon128.png
+  safari_pinned_tab: /images/icons/moon128.svg
+  msapplication: /images/icons/moon144.png
 
 # Font
 font:
@@ -56,14 +56,14 @@ preview:
   background:
     type: image # image video
     default_image:
-      light: /images/theme/welcome-image.png
-      dark: /images/theme/welcome-image6.jfif
+      light: /images/theme/moon.jpg
+      dark: /images/theme/moon2.jpg
     video:
     api: # https://source.unsplash.com/random/1920x1080
     size: cover # css: background-size
     position: center # css: background-position
   motto:
-    default: "啊！她好美 她好美 她好美！"
+    default: "阿树，生日快乐！"
     color: '#ffffff'
     typing: true
     api: ''
