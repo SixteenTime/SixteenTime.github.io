@@ -56,14 +56,14 @@ preview:
   background:
     type: image # image video
     default_image:
-      light: /images/theme/moon.jpg
-      dark: /images/theme/moon2.jpg
+      light: /images/theme/moon1.jpg
+      dark: /images/theme/moon3.jpg
     video:
     api: # https://source.unsplash.com/random/1920x1080
     size: cover # css: background-size
     position: center # css: background-position
   motto:
-    default: "阿树，生日快乐！"
+    default: "清晨读诗计划"
     color: '#ffffff'
     typing: true
     api: ''
