@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>happy birthday to tree!</title>
+  <title>清晨读诗计划</title>
   
-  <subtitle>许树生日快乐！</subtitle>
+  <subtitle>虽然已经没人读了！</subtitle>
   <link href="https://sixteentime.github.io/atom.xml" rel="self"/>
   
   <link href="https://sixteentime.github.io/"/>
-  <updated>2022-06-18T11:00:52.870Z</updated>
+  <updated>2022-09-20T13:18:21.870Z</updated>
   <id>https://sixteentime.github.io/</id>
   
   <author>
@@ -17,27 +17,26 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>生日快乐</title>
-    <link href="https://sixteentime.github.io/2022/06/21/%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/"/>
-    <id>https://sixteentime.github.io/2022/06/21/%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/</id>
-    <published>2022-06-20T16:06:21.000Z</published>
-    <updated>2022-06-18T11:00:52.870Z</updated>
+    <title>关于这个网站</title>
+    <link href="https://sixteentime.github.io/2022/09/20/%E5%85%B3%E4%BA%8E%E8%BF%99%E4%B8%AA%E7%BD%91%E7%AB%99/"/>
+    <id>https://sixteentime.github.io/2022/09/20/%E5%85%B3%E4%BA%8E%E8%BF%99%E4%B8%AA%E7%BD%91%E7%AB%99/</id>
+    <published>2022-09-19T16:20:21.000Z</published>
+    <updated>2022-09-20T13:18:21.870Z</updated>
     
-    <content type="html"><![CDATA[<p>阿树，生日快乐！</p><p>收到礼物了吗，希望你能喜欢❤。</p><p>我也不知道说些啥~</p><p>这个网站其实就是我之前搞得博客换了个壳…</p><p>然后我发现好像也没啥用，就只能写点文章搞几个相册啥的</p><p>但是好像也没啥文章要写些啥（所以就只有孤零零一篇），相册也没啥好搞的（就搞了个电影海报…）</p><p>但是反正我在家里也不想学习有的是时间搞这些</p><p>搞好后又觉得这个网站似乎很多余…</p><p>总之阿树看看就行嘻嘻。</p><p>对了，网页首页的那张图片可能没有显示完整，给你看完整的~</p><p><img src="/images/moon.jpg"></p>]]></content>
+    <content type="html"><![CDATA[<p>服务器是部署在外网的，相对比较安全</p><p>网址也没有在国内做过备份，所以也不能部署到国内来</p><p>加载速度可能比较慢</p><p>现在主要只有上传文章和图片的功能</p><p>文章似乎没有人需要上传</p><p>（上传了也没其他人看）</p><p>以后可能会开发留言功能</p><p>敬请期待</p>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;阿树，生日快乐！&lt;/p&gt;
-&lt;p&gt;收到礼物了吗，希望你能喜欢❤。&lt;/p&gt;
-&lt;p&gt;我也不知道说些啥~&lt;/p&gt;
-&lt;p&gt;这个网站其实就是我之前搞得博客换了个壳…&lt;/p&gt;
-&lt;p&gt;然后我发现好像也没啥用，就只能写点文章搞几个相册啥的&lt;/p&gt;
-&lt;p&gt;但是好像也没啥文章要写些啥（所以就只有</summary>
+    <summary type="html">&lt;p&gt;服务器是部署在外网的，相对比较安全&lt;/p&gt;
+&lt;p&gt;网址也没有在国内做过备份，所以也不能部署到国内来&lt;/p&gt;
+&lt;p&gt;加载速度可能比较慢&lt;/p&gt;
+&lt;p&gt;现在主要只有上传文章和图片的功能&lt;/p&gt;
+&lt;p&gt;文章似乎没有人需要上传&lt;/p&gt;
+&lt;p&gt;（上传了也没其他人看）&lt;/p&gt;
+&lt;p&gt;以</summary>
       
     
-    
-    <content src="https://sixteentime.github.io/images/moon2.jpg" type="image"/>
     
     
     
