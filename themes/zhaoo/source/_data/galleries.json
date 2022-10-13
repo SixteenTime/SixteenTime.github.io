@@ -1,0 +1,20 @@
+[{
+    "name": "美女", 
+    "cover": "/images/theme/welcome-image6.jfif", 
+    "description": "好喜欢她们啊。", 
+    "photos": [ 
+      "/images/theme/welcome-image6.jfif",
+      "/images/theme/welcome-image7.jfif",
+      "/images/theme/welcome-image.png"
+    ]
+  }, {
+    "name": "记事",
+    "cover": "/images/theme/post-image.png",
+    "description": "翻开随身携带的记事本，写着许多事都是关于你。",
+    "photos": [
+      "/images/theme/post-image.png",
+      "/images/theme/post-image.png",
+      "/images/theme/post-image.png",
+      "/images/theme/post-image.png"
+    ]
+  }]
